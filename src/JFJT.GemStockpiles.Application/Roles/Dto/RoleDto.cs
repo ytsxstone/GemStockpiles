@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Abp.Application.Services.Dto;
-using Abp.Authorization.Roles;
 using Abp.AutoMapper;
+using Abp.Authorization.Roles;
+using Abp.Application.Services.Dto;
 using JFJT.GemStockpiles.Authorization.Roles;
 
 namespace JFJT.GemStockpiles.Roles.Dto

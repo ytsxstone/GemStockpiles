@@ -32,5 +32,14 @@ namespace JFJT.GemStockpiles.EntityFrameworkCore
         public DbSet<Product> Product { get; set; }
         public DbSet<ProductMedia> ProductMedia { get; set; }
         public DbSet<ProductAttributeValue> ProductAttributeValue { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            //设置该字段非必输项
+            modelBuilder.Entity<User>().Property(a => a.Surname).IsRequired(false);
+            modelBuilder.Entity<User>().Property(a => a.EmailAddress).IsRequired(false);
+        }
     }
 }

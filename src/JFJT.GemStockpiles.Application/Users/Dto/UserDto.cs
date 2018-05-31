@@ -1,8 +1,9 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using Abp.Application.Services.Dto;
-using Abp.Authorization.Users;
+using Abp.Auditing;
 using Abp.AutoMapper;
+using Abp.Authorization.Users;
+using Abp.Application.Services.Dto;
 using JFJT.GemStockpiles.Authorization.Users;
 
 namespace JFJT.GemStockpiles.Users.Dto
@@ -18,14 +19,15 @@ namespace JFJT.GemStockpiles.Users.Dto
         [StringLength(AbpUserBase.MaxNameLength)]
         public string Name { get; set; }
 
-        [Required]
         [StringLength(AbpUserBase.MaxSurnameLength)]
         public string Surname { get; set; }
 
-        [Required]
-        [EmailAddress]
         [StringLength(AbpUserBase.MaxEmailAddressLength)]
         public string EmailAddress { get; set; }
+
+        [Required]
+        [DisableAuditing]
+        public string Password { get; set; }
 
         public bool IsActive { get; set; }
 

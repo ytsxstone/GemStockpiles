@@ -1,23 +1,25 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Abp.Extensions;
+using Abp.Authorization;
+using Abp.Linq.Extensions;
+using Abp.IdentityFramework;
+using Abp.Domain.Repositories;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
-using Abp.Authorization;
-using Abp.Domain.Repositories;
-using Abp.IdentityFramework;
-using Abp.UI;
+using JFJT.GemStockpiles.Roles.Dto;
+using JFJT.GemStockpiles.Common.Dto;
 using JFJT.GemStockpiles.Authorization;
 using JFJT.GemStockpiles.Authorization.Roles;
 using JFJT.GemStockpiles.Authorization.Users;
-using JFJT.GemStockpiles.Roles.Dto;
 
 namespace JFJT.GemStockpiles.Roles
 {
     [AbpAuthorize(PermissionNames.Pages_SystemManagement_Roles)]
-    public class RoleAppService : AsyncCrudAppService<Role, RoleDto, int, PagedResultRequestDto, CreateRoleDto, RoleDto>, IRoleAppService
+    public class RoleAppService : AsyncCrudAppService<Role, RoleDto, int, PagedResultRequestExtendDto, CreateRoleDto, RoleDto>, IRoleAppService
     {
         private readonly RoleManager _roleManager;
         private readonly UserManager _userManager;
@@ -95,9 +97,9 @@ namespace JFJT.GemStockpiles.Roles
             ));
         }
 
-        protected override IQueryable<Role> CreateFilteredQuery(PagedResultRequestDto input)
+        protected override IQueryable<Role> CreateFilteredQuery(PagedResultRequestExtendDto input)
         {
-            return Repository.GetAllIncluding(x => x.Permissions);
+            return Repository.GetAllIncluding(x => x.Permissions).WhereIf(!input.KeyWord.IsNullOrWhiteSpace(), x => x.Name.Contains(input.KeyWord) || x.DisplayName.Contains(input.KeyWord));
         }
 
         protected override async Task<Role> GetEntityByIdAsync(int id)
@@ -105,7 +107,7 @@ namespace JFJT.GemStockpiles.Roles
             return await Repository.GetAllIncluding(x => x.Permissions).FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        protected override IQueryable<Role> ApplySorting(IQueryable<Role> query, PagedResultRequestDto input)
+        protected override IQueryable<Role> ApplySorting(IQueryable<Role> query, PagedResultRequestExtendDto input)
         {
             return query.OrderBy(r => r.DisplayName);
         }

@@ -5,6 +5,7 @@ using Xunit;
 using Abp.Application.Services.Dto;
 using JFJT.GemStockpiles.Users;
 using JFJT.GemStockpiles.Users.Dto;
+using JFJT.GemStockpiles.Common.Dto;
 
 namespace JFJT.GemStockpiles.Tests.Users
 {
@@ -21,7 +22,7 @@ namespace JFJT.GemStockpiles.Tests.Users
         public async Task GetUsers_Test()
         {
             // Act
-            var output = await _userAppService.GetAll(new PagedResultRequestDto{MaxResultCount=20, SkipCount=0} );
+            var output = await _userAppService.GetAll(new PagedResultRequestExtendDto{MaxResultCount=20, SkipCount=0} );
 
             // Assert
             output.Items.Count.ShouldBeGreaterThan(0);

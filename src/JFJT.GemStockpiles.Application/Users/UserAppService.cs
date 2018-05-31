@@ -1,26 +1,29 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Abp.Application.Services;
-using Abp.Application.Services.Dto;
+using Abp.Extensions;
+using Abp.Localization;
 using Abp.Authorization;
+using Abp.Linq.Extensions;
+using Abp.Runtime.Session;
+using Abp.IdentityFramework;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
-using Abp.IdentityFramework;
-using Abp.Localization;
-using Abp.Runtime.Session;
+using Abp.Application.Services;
+using Abp.Application.Services.Dto;
+using JFJT.GemStockpiles.Roles.Dto;
+using JFJT.GemStockpiles.Users.Dto;
+using JFJT.GemStockpiles.Common.Dto;
 using JFJT.GemStockpiles.Authorization;
 using JFJT.GemStockpiles.Authorization.Roles;
 using JFJT.GemStockpiles.Authorization.Users;
-using JFJT.GemStockpiles.Roles.Dto;
-using JFJT.GemStockpiles.Users.Dto;
 
 namespace JFJT.GemStockpiles.Users
 {
     [AbpAuthorize(PermissionNames.Pages_SystemManagement_Users)]
-    public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedResultRequestDto, CreateUserDto, UserDto>, IUserAppService
+    public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedResultRequestExtendDto, CreateUserDto, UserDto>, IUserAppService
     {
         private readonly UserManager _userManager;
         private readonly RoleManager _roleManager;
@@ -70,8 +73,14 @@ namespace JFJT.GemStockpiles.Users
             CheckUpdatePermission();
 
             var user = await _userManager.GetUserByIdAsync(input.Id);
+            var oldPassword = user.Password;
 
             MapToEntity(input, user);
+
+            if (!string.IsNullOrWhiteSpace(input.Password) && !input.Password.Equals(oldPassword))
+            {
+                user.Password = _passwordHasher.HashPassword(user, input.Password);
+            }
 
             CheckErrors(await _userManager.UpdateAsync(user));
 
@@ -126,9 +135,9 @@ namespace JFJT.GemStockpiles.Users
             return userDto;
         }
 
-        protected override IQueryable<User> CreateFilteredQuery(PagedResultRequestDto input)
+        protected override IQueryable<User> CreateFilteredQuery(PagedResultRequestExtendDto input)
         {
-            return Repository.GetAllIncluding(x => x.Roles);
+            return Repository.GetAllIncluding(x => x.Roles).WhereIf(!input.KeyWord.IsNullOrWhiteSpace(), x => x.UserName.Contains(input.KeyWord) || x.Name.Contains(input.KeyWord));
         }
 
         protected override async Task<User> GetEntityByIdAsync(long id)
@@ -143,7 +152,7 @@ namespace JFJT.GemStockpiles.Users
             return user;
         }
 
-        protected override IQueryable<User> ApplySorting(IQueryable<User> query, PagedResultRequestDto input)
+        protected override IQueryable<User> ApplySorting(IQueryable<User> query, PagedResultRequestExtendDto input)
         {
             return query.OrderBy(r => r.UserName);
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using Abp.Authorization.Users;
 using Abp.Extensions;
 
@@ -12,6 +13,12 @@ namespace JFJT.GemStockpiles.Authorization.Users
         {
             return Guid.NewGuid().ToString("N").Truncate(16);
         }
+
+        [Required(AllowEmptyStrings = true)]
+        public override string Surname { get; set; }
+
+        [Required(AllowEmptyStrings = true)]
+        public override string EmailAddress { get; set; }
 
         public static User CreateTenantAdminUser(int tenantId, string emailAddress)
         {

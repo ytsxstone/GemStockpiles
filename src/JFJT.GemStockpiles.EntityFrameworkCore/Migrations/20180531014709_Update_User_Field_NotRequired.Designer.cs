@@ -17,9 +17,10 @@ using System;
 namespace JFJT.GemStockpiles.Migrations
 {
     [DbContext(typeof(GemStockpilesDbContext))]
-    partial class GemStockpilesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180531014709_Update_User_Field_NotRequired")]
+    partial class Update_User_Field_NotRequired
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

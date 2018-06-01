@@ -19,6 +19,7 @@ using JFJT.GemStockpiles.Common.Dto;
 using JFJT.GemStockpiles.Authorization;
 using JFJT.GemStockpiles.Authorization.Roles;
 using JFJT.GemStockpiles.Authorization.Users;
+using Abp.UI;
 
 namespace JFJT.GemStockpiles.Users
 {
@@ -99,6 +100,24 @@ namespace JFJT.GemStockpiles.Users
             await _userManager.DeleteAsync(user);
         }
 
+        public async Task<UserDto> UpdateUserInfo(ChangeUserInfoDto input)
+        {
+            var user = await _userManager.GetUserByIdAsync(input.Id);
+
+            user.Name = input.Name;
+
+            CheckErrors(await _userManager.UpdateAsync(user));
+
+            return await Get(input);
+        }
+
+        public async Task ChangePassword(ChangePasswordDto input)
+        {
+            var user = await _userManager.GetUserByIdAsync(input.Id);
+
+            CheckErrors(await _userManager.ChangePasswordAsync(user, input.OldPassword, input.NewPassword));
+        }
+
         public async Task<ListResultDto<RoleDto>> GetRoles()
         {
             var roles = await _roleRepository.GetAllListAsync();
@@ -133,6 +152,12 @@ namespace JFJT.GemStockpiles.Users
             var userDto = base.MapToEntityDto(user);
             userDto.RoleNames = roles.ToArray();
             return userDto;
+        }
+
+        protected void MapToEntity(ChangeUserInfoDto input, User user)
+        {
+            ObjectMapper.Map(input, user);
+            user.SetNormalizedNames();
         }
 
         protected override IQueryable<User> CreateFilteredQuery(PagedResultRequestExtendDto input)

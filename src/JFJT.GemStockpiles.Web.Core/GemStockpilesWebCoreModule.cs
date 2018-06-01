@@ -11,6 +11,10 @@ using Abp.Zero.Configuration;
 using JFJT.GemStockpiles.Authentication.JwtBearer;
 using JFJT.GemStockpiles.Configuration;
 using JFJT.GemStockpiles.EntityFrameworkCore;
+using Abp.Localization;
+using Abp.Localization.Dictionaries;
+using Abp.Localization.Dictionaries.Json;
+using System.Globalization;
 
 #if FEATURE_SIGNALR
 using Abp.Web.SignalR;
@@ -48,12 +52,14 @@ namespace JFJT.GemStockpiles
             );
 
             // Use database for language management
-            Configuration.Modules.Zero().LanguageManagement.EnableDbLocalization();
+            //Configuration.Modules.Zero().LanguageManagement.EnableDbLocalization();
+            //Configuration.Localization.Languages.Add(new LanguageInfo("zh-Hans", "简体中文", isDefault: true));
+            CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo("zh-Hans");
 
             Configuration.Modules.AbpAspNetCore()
                  .CreateControllersForAppServices(
                      typeof(GemStockpilesApplicationModule).GetAssembly()
-                 );
+            );
 
             ConfigureTokenAuth();
         }

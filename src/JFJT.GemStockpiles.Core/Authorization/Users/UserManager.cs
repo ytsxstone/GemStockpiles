@@ -16,6 +16,7 @@ using Abp.Domain.Uow;
 using Abp.Organizations;
 using Abp.Runtime.Caching;
 using JFJT.GemStockpiles.Authorization.Roles;
+using System.Linq;
 
 namespace JFJT.GemStockpiles.Authorization.Users
 {
@@ -117,6 +118,23 @@ namespace JFJT.GemStockpiles.Authorization.Users
             }
 
             return await base.UpdateAsync(user);
+        }
+
+        public override async Task<IdentityResult> ChangePasswordAsync(User user, string currentPassword, string newPassword)
+        {
+            if (currentPassword.IsNullOrEmpty() || newPassword.IsNullOrEmpty())
+            {
+                throw new UserFriendlyException("修改失败", "参数错误!");
+            }
+
+            if (PasswordHasher.VerifyHashedPassword(user, user.Password, currentPassword) == PasswordVerificationResult.Failed)
+            {
+                throw new UserFriendlyException("修改失败", "原密码错误!");
+            }
+
+            await AbpStore.SetPasswordHashAsync(user, PasswordHasher.HashPassword(user, newPassword));
+
+            return IdentityResult.Success;
         }
 
         private int? GetCurrentTenantId()

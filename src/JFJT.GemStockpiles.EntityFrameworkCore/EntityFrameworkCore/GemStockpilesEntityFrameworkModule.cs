@@ -21,7 +21,7 @@ namespace JFJT.GemStockpiles.EntityFrameworkCore
             if (!SkipDbContextRegistration)
             {
                 Configuration.Modules.AbpEfCore().AddDbContext<GemStockpilesDbContext>(options =>
-                {
+               {
                     if (options.ExistingConnection != null)
                     {
                         GemStockpilesDbContextConfigurer.Configure(options.DbContextOptions, options.ExistingConnection);

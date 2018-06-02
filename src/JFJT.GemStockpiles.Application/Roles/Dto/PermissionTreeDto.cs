@@ -12,8 +12,6 @@ namespace JFJT.GemStockpiles.Roles.Dto
 
         public bool expand { get; set; } = true;
 
-        public bool selected { get; set; } = false;
-
         public List<PermissionTreeDto> children { get; set; } = new List<PermissionTreeDto>();
     }
 }

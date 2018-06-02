@@ -109,47 +109,46 @@ namespace JFJT.GemStockpiles.Roles
             //));
             #endregion
 
-            List<PermissionTreeDto> list = new List<PermissionTreeDto>();
+            List<PermissionTreeDto> treeList = new List<PermissionTreeDto>();
 
             var permissions = PermissionManager.GetAllPermissions();
+            //
             var treeData = new ListResultDto<FlatPermissionDto>(ObjectMapper.Map<List<FlatPermissionDto>>(permissions));
 
             if (treeData != null)
             {
-                foreach (var item in treeData.Items.Where(p => p.ParentName == null))
-                {
-                    var child = GetPermissionChildren(treeData, item.Name, 0);
-
-                    var model = new PermissionTreeDto() { title = item.Name, name = item.DisplayName, level = 0, selected = false };
-                    model.children = child.Count <= 0 ? null : child;
-                    model.expand = true;
-
-                    list.Add(model);
-                }
+                treeList = GetTreePermissionList(treeData, null, 0);
             }
 
-            return Task.FromResult(new ListResultDto<PermissionTreeDto>(ObjectMapper.Map<List<PermissionTreeDto>>(list)));
+            return Task.FromResult(new ListResultDto<PermissionTreeDto>(ObjectMapper.Map<List<PermissionTreeDto>>(treeList)));
         }
 
-        public List<PermissionTreeDto> GetPermissionChildren(ListResultDto<FlatPermissionDto> permissionData, string parentName, int parentLevel)
+        /// <summary>
+        /// 递归生成权限Tree
+        /// </summary>
+        /// <param name="permissionData"></param>
+        /// <param name="parentName"></param>
+        /// <param name="parentLevel"></param>
+        /// <returns></returns>
+        public List<PermissionTreeDto> GetTreePermissionList(ListResultDto<FlatPermissionDto> permissionData, string parentName, int parentLevel)
         {
-            List<PermissionTreeDto> list = new List<PermissionTreeDto>();
+            List<PermissionTreeDto> treeList = new List<PermissionTreeDto>();
 
             var level = parentLevel + 1;
-            var childs = permissionData.Items.Where(b => b.ParentName == parentName).ToList();
+            var treeData = permissionData.Items.Where(b => b.ParentName == parentName).ToList();
 
-            foreach (var item in childs)
+            foreach (var item in treeData)
             {
-                var child = GetPermissionChildren(permissionData, item.Name, level);
+                var children = GetTreePermissionList(permissionData, item.Name, level);
 
-                var model = new PermissionTreeDto() { title = item.Name, name = item.DisplayName, level = level, selected = false };
-                model.children = child.Count <= 0 ? null : child;
-                model.expand = level < 2 ? true : false;
+                var model = new PermissionTreeDto() { title = item.DisplayName, name = item.Name, level = level };
+                model.children = children.Count <= 0 ? null : children;
+                model.expand = level <= 2 ? true : false;
 
-                list.Add(model);
+                treeList.Add(model);
             }
 
-            return list;
+            return treeList;
         }
 
         protected override IQueryable<Role> CreateFilteredQuery(PagedResultRequestExtendDto input)

@@ -21,8 +21,10 @@
         public const string Pages_SystemManagement_Users_Edit = "Pages.SystemManagement.Users.Edit";
         public const string Pages_SystemManagement_Users_Delete = "Pages.SystemManagement.Users.Delete";
 
-        //多租户
         public const string Pages_SystemManagement_Tenants = "Pages.SystemManagement.Tenants";
+        public const string Pages_SystemManagement_Tenants_Create = "Pages.SystemManagement.Tenants.Create";
+        public const string Pages_SystemManagement_Tenants_Edit = "Pages.SystemManagement.Tenants.Edit";
+        public const string Pages_SystemManagement_Tenants_Delete = "Pages.SystemManagement.Tenants.Delete";
         #endregion
 
         #region 积分管理

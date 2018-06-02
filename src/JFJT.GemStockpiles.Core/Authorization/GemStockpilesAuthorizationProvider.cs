@@ -23,8 +23,10 @@ namespace JFJT.GemStockpiles.Authorization
             users.CreateChildPermission(PermissionNames.Pages_SystemManagement_Users_Edit, L("EditUser"));
             users.CreateChildPermission(PermissionNames.Pages_SystemManagement_Users_Delete, L("DeleteUser"));
 
-            //多租户
-            pages.CreateChildPermission(PermissionNames.Pages_SystemManagement_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
+            var tenants = systemManagement.CreateChildPermission(PermissionNames.Pages_SystemManagement_Tenants, L("Tenants"), multiTenancySides: MultiTenancySides.Host);
+            tenants.CreateChildPermission(PermissionNames.Pages_SystemManagement_Tenants_Create, L("CreateTenant"), multiTenancySides: MultiTenancySides.Host);
+            tenants.CreateChildPermission(PermissionNames.Pages_SystemManagement_Tenants_Edit, L("EditTenant"), multiTenancySides: MultiTenancySides.Host);
+            tenants.CreateChildPermission(PermissionNames.Pages_SystemManagement_Tenants_Delete, L("DeleteTenant"), multiTenancySides: MultiTenancySides.Host);
             #endregion
 
             #region 积分管理

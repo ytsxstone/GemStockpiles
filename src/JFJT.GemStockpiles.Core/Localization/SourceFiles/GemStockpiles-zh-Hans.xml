@@ -21,5 +21,29 @@
 
     <text name="LoginFailed" value="登录失败!" />
     
+    <!--权限名称-->
+    <text name="Pages" value="页面" />
+    <text name="SystemManagement" value="系统管理" />
+    <text name="Roles" value="角色管理" />
+    <text name="CreateRole" value="添加角色" />
+    <text name="EditRole" value="修改角色" />
+    <text name="DeleteRole" value="删除角色" />
+    <text name="Users" value="用户管理" />
+    <text name="CreateUser" value="添加用户" />
+    <text name="EditUser" value="修改用户" />
+    <text name="DeleteUser" value="删除用户" />
+    <text name="Tenants" value="租户管理" />
+    <text name="CreateTenant" value="添加租户" />
+    <text name="EditTenant" value="修改租户" />
+    <text name="DeleteTenant" value="删除租户" />
+    <text name="PointManagement" value="积分设置" />
+    <text name="PointRules" value="积分规则" />
+    <text name="CreatePointRule" value="添加规则" />
+    <text name="EditPointRule" value="修改规则" />
+    <text name="DeletePointRule" value="删除规则" />
+    <text name="PointRanks" value="积分体系" />
+    <text name="CreatePointRank" value="添加等级" />
+    <text name="EditPointRank" value="修改等级" />
+    <text name="DeletePointRank" value="删除等级" />
   </texts>
 </localizationDictionary>

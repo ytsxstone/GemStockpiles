@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Abp.AutoMapper;
 using Abp.Extensions;
 using Abp.Authorization;
 using Abp.Linq.Extensions;
@@ -15,6 +16,7 @@ using JFJT.GemStockpiles.Common.Dto;
 using JFJT.GemStockpiles.Authorization;
 using JFJT.GemStockpiles.Authorization.Roles;
 using JFJT.GemStockpiles.Authorization.Users;
+using Abp.MultiTenancy;
 
 namespace JFJT.GemStockpiles.Roles
 {
@@ -95,6 +97,59 @@ namespace JFJT.GemStockpiles.Roles
             return Task.FromResult(new ListResultDto<PermissionDto>(
                 ObjectMapper.Map<List<PermissionDto>>(permissions)
             ));
+        }
+
+        public Task<ListResultDto<PermissionTreeDto>> GetTreePermissions()
+        {
+            #region
+            //var permissions = PermissionManager.GetAllPermissions();
+
+            //return Task.FromResult(new ListResultDto<FlatPermissionDto>(
+            //    ObjectMapper.Map<List<FlatPermissionDto>>(permissions).OrderBy(p => p.Name).ToList()
+            //));
+            #endregion
+
+            List<PermissionTreeDto> list = new List<PermissionTreeDto>();
+
+            var permissions = PermissionManager.GetAllPermissions();
+            var treeData = new ListResultDto<FlatPermissionDto>(ObjectMapper.Map<List<FlatPermissionDto>>(permissions));
+
+            if (treeData != null)
+            {
+                foreach (var item in treeData.Items.Where(p => p.ParentName == null))
+                {
+                    var child = GetPermissionChildren(treeData, item.Name, 0);
+
+                    var model = new PermissionTreeDto() { title = item.Name, name = item.DisplayName, level = 0, selected = false };
+                    model.children = child.Count <= 0 ? null : child;
+                    model.expand = true;
+
+                    list.Add(model);
+                }
+            }
+
+            return Task.FromResult(new ListResultDto<PermissionTreeDto>(ObjectMapper.Map<List<PermissionTreeDto>>(list)));
+        }
+
+        public List<PermissionTreeDto> GetPermissionChildren(ListResultDto<FlatPermissionDto> permissionData, string parentName, int parentLevel)
+        {
+            List<PermissionTreeDto> list = new List<PermissionTreeDto>();
+
+            var level = parentLevel + 1;
+            var childs = permissionData.Items.Where(b => b.ParentName == parentName).ToList();
+
+            foreach (var item in childs)
+            {
+                var child = GetPermissionChildren(permissionData, item.Name, level);
+
+                var model = new PermissionTreeDto() { title = item.Name, name = item.DisplayName, level = level, selected = false };
+                model.children = child.Count <= 0 ? null : child;
+                model.expand = level < 2 ? true : false;
+
+                list.Add(model);
+            }
+
+            return list;
         }
 
         protected override IQueryable<Role> CreateFilteredQuery(PagedResultRequestExtendDto input)

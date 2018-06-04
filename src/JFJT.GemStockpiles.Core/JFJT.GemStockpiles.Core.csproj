@@ -12,7 +12,16 @@
     <RootNamespace>JFJT.GemStockpiles</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Localization\SourceFiles\*.xml" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
+    <EmbeddedResource Include="Localization\SourceFiles\GemStockpiles-es.xml" />
+    <EmbeddedResource Include="Localization\SourceFiles\GemStockpiles-fr.xml" />
+    <EmbeddedResource Include="Localization\SourceFiles\GemStockpiles-it.xml" />
+    <EmbeddedResource Include="Localization\SourceFiles\GemStockpiles-ja.xml" />
+    <EmbeddedResource Include="Localization\SourceFiles\GemStockpiles-lt.xml" />
+    <EmbeddedResource Include="Localization\SourceFiles\GemStockpiles-nl.xml" />
+    <EmbeddedResource Include="Localization\SourceFiles\GemStockpiles-pt-BR.xml" />
+    <EmbeddedResource Include="Localization\SourceFiles\GemStockpiles-tr.xml" />
+    <EmbeddedResource Include="Localization\SourceFiles\GemStockpiles-zh-Hans.xml" />
+    <EmbeddedResource Include="Localization\SourceFiles\GemStockpiles.xml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Abp.AutoMapper" Version="3.6.1" />

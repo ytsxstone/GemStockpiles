@@ -144,7 +144,8 @@ namespace JFJT.GemStockpiles.Web.Host.Startup
 #if FEATURE_SIGNALR
         private static void ConfigureOwinServices(IAppBuilder app)
         {
-            app.Properties["host.AppName"] = "GemStockpiles";
+            app.Properties["host.AppName
+        "] = "GemStockpiles";
 
             app.UseAbp();
             

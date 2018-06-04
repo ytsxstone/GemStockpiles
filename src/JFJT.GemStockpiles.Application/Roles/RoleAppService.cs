@@ -90,6 +90,24 @@ namespace JFJT.GemStockpiles.Roles
             CheckErrors(await _roleManager.DeleteAsync(role));
         }
 
+        public async Task<RoleDto> GetRoleForEdit(int? id)
+        {
+            if (id.HasValue)
+            {
+                var role = await _roleManager.GetRoleByIdAsync(id.Value);
+                var grantedPermissions = (await _roleManager.GetGrantedPermissionsAsync(role)).ToArray();
+
+                RoleDto editRoleDto = ObjectMapper.Map<RoleDto>(role);
+                editRoleDto.Permissions = grantedPermissions.Select(t => t.Name).ToList();
+
+                return editRoleDto;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public Task<ListResultDto<PermissionDto>> GetAllPermissions()
         {
             var permissions = PermissionManager.GetAllPermissions();

@@ -8,7 +8,7 @@ namespace JFJT.GemStockpiles.Roles
 {
     public interface IRoleAppService : IAsyncCrudAppService<RoleDto, int, PagedResultRequestExtendDto, CreateRoleDto, RoleDto>
     {
-        Task<RoleDto> GetRoleForEdit(int? id);
+        Task<RoleDto> GetRoleForEdit(int id);
 
         Task<ListResultDto<PermissionDto>> GetAllPermissions();
 

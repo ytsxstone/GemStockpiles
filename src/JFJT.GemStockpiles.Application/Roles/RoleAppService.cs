@@ -90,22 +90,17 @@ namespace JFJT.GemStockpiles.Roles
             CheckErrors(await _roleManager.DeleteAsync(role));
         }
 
-        public async Task<RoleDto> GetRoleForEdit(int? id)
+        public async Task<RoleDto> GetRoleForEdit(int id)
         {
-            if (id.HasValue)
-            {
-                var role = await _roleManager.GetRoleByIdAsync(id.Value);
-                var grantedPermissions = (await _roleManager.GetGrantedPermissionsAsync(role)).ToArray();
+            var role = await _roleManager.GetRoleByIdAsync(id);
+            //获取有效权限项
+            var grantedPermissions = (await _roleManager.GetGrantedPermissionsAsync(role)).ToArray();
 
-                RoleDto editRoleDto = ObjectMapper.Map<RoleDto>(role);
-                editRoleDto.Permissions = grantedPermissions.Select(t => t.Name).ToList();
+            RoleDto editRoleDto = ObjectMapper.Map<RoleDto>(role);
+            //更新实体权限
+            editRoleDto.Permissions = grantedPermissions.Select(t => t.Name).ToList();
 
-                return editRoleDto;
-            }
-            else
-            {
-                return null;
-            }
+            return editRoleDto;
         }
 
         public Task<ListResultDto<PermissionDto>> GetAllPermissions()

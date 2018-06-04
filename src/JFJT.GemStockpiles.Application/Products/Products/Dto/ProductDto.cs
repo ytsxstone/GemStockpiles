@@ -6,7 +6,7 @@ using JFJT.GemStockpiles.Models.Products;
 using Abp.Application.Services.Dto;
 using JFJT.GemStockpiles.Enums;
 
-namespace JFJT.GemStockpiles.Products
+namespace JFJT.GemStockpiles.Products.Products.Dto
 {
     /// <summary>
     /// 商品管理Dto

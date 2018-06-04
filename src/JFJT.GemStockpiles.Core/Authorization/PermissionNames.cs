@@ -68,7 +68,6 @@
         public const string Pages_ProductManagement_Categorys_Delete = "Pages.ProductManagement.Categorys.Delete";
         #endregion
 
-
         #region 订单管理
         public const string Pages_OrderManagement = "Pages.OrderManagement";
 

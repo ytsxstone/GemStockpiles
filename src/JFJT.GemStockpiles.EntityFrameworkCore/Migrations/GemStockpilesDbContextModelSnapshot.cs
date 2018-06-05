@@ -1103,7 +1103,7 @@ namespace JFJT.GemStockpiles.Migrations
 
             modelBuilder.Entity("JFJT.GemStockpiles.Models.Points.PointRank", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Avatar");
@@ -1129,7 +1129,7 @@ namespace JFJT.GemStockpiles.Migrations
 
             modelBuilder.Entity("JFJT.GemStockpiles.Models.Points.PointRule", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("CreationTime");
@@ -1159,38 +1159,6 @@ namespace JFJT.GemStockpiles.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PointRule");
-                });
-
-            modelBuilder.Entity("JFJT.GemStockpiles.Models.Products.Category", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("CreationTime");
-
-                    b.Property<long?>("CreatorUserId");
-
-                    b.Property<long?>("DeleterUserId");
-
-                    b.Property<DateTime?>("DeletionTime");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<DateTime?>("LastModificationTime");
-
-                    b.Property<long?>("LastModifierUserId");
-
-                    b.Property<string>("Name");
-
-                    b.Property<Guid>("ParentId");
-
-                    b.Property<string>("Remark");
-
-                    b.Property<int>("Sort");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("JFJT.GemStockpiles.Models.Products.CategoryAttribute", b =>
@@ -1251,6 +1219,38 @@ namespace JFJT.GemStockpiles.Migrations
                     b.HasIndex("CategoryAttributeId");
 
                     b.ToTable("CategoryAttributeItem");
+                });
+
+            modelBuilder.Entity("JFJT.GemStockpiles.Models.Products.Categorys", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<long?>("DeleterUserId");
+
+                    b.Property<DateTime?>("DeletionTime");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<long?>("LastModifierUserId");
+
+                    b.Property<string>("Name");
+
+                    b.Property<Guid?>("ParentId");
+
+                    b.Property<string>("Remark");
+
+                    b.Property<int>("Sort");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("JFJT.GemStockpiles.Models.Products.Product", b =>

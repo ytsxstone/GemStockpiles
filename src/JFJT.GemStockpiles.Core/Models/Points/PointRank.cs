@@ -6,7 +6,7 @@ namespace JFJT.GemStockpiles.Models.Points
     /// <summary>
     /// 积分等级
     /// </summary>
-    public class PointRank : CreateModifyAudited
+    public class PointRank : CreateModifyAudited<Guid>
     {
         /// <summary>
         /// 等级名称

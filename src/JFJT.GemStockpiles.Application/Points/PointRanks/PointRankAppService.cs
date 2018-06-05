@@ -1,11 +1,15 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
+using Abp.UI;
 using AutoMapper;
 using Abp.Authorization;
+using Abp.Domain.Entities;
+using Abp.Domain.Repositories;
+using Abp.IdentityFramework;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
-using Abp.Domain.Repositories;
 using JFJT.GemStockpiles.Authorization;
 using JFJT.GemStockpiles.Models.Points;
 using JFJT.GemStockpiles.Points.PointRanks.Dto;
@@ -13,27 +17,100 @@ using JFJT.GemStockpiles.Points.PointRanks.Dto;
 namespace JFJT.GemStockpiles.Points.PointRanks
 {
     [AbpAuthorize(PermissionNames.Pages_PointManagement_PointRanks)]
-    public class PointRankAppService : AsyncCrudAppService<PointRule, PointRankDto, int, PagedResultRequestDto, PointRankDto, PointRankDto>, IPointRankAppService
+    public class PointRankAppService : AsyncCrudAppService<PointRank, PointRankDto, Guid, PagedResultRequestDto, PointRankDto, PointRankDto>, IPointRankAppService
     {
-        private readonly IRepository<PointRule> _pointRuleRepository;
+        private readonly IRepository<PointRank, Guid> _pointRankRepository;
 
-        public PointRankAppService(IRepository<PointRule> pointRuleRepository)
-            : base(pointRuleRepository)
+        public PointRankAppService(IRepository<PointRank, Guid> pointRankRepository)
+            : base(pointRankRepository)
         {
-            _pointRuleRepository = pointRuleRepository;
+            _pointRankRepository = pointRankRepository;
         }
 
-        /// <summary>
-        /// 获取所有积分等级列表
-        /// </summary>
-        /// <returns></returns>
-        public Task<ListResultDto<PointRankDto>> GetAllPointRanks()
+        [AbpAuthorize(PermissionNames.Pages_PointManagement_PointRanks_Create)]
+        public override async Task<PointRankDto> Create(PointRankDto input)
         {
-            var pointRules = _pointRuleRepository.GetAllList();
+            CheckCreatePermission();
 
-            return Task.FromResult(new ListResultDto<PointRankDto>(
-                ObjectMapper.Map<List<PointRankDto>>(pointRules)
-            ));
+            CheckErrors(await CheckNameOrMinPointAsync(input.Id, input.Name, input.MinPoint));
+
+            var entity = ObjectMapper.Map<PointRank>(input);
+
+            entity = await _pointRankRepository.InsertAsync(entity);
+
+            return MapToEntityDto(entity);
+        }
+
+        [AbpAuthorize(PermissionNames.Pages_PointManagement_PointRanks_Edit)]
+        public override async Task<PointRankDto> Update(PointRankDto input)
+        {
+            CheckUpdatePermission();
+
+            var entity = await _pointRankRepository.GetAsync(input.Id);
+            if (entity == null)
+                throw new EntityNotFoundException(typeof(PointRank), input.Id);
+
+            CheckErrors(await CheckNameOrMinPointAsync(input.Id, input.Name, input.MinPoint));
+
+            MapToEntity(input, entity);
+
+            entity = await _pointRankRepository.UpdateAsync(entity);
+
+            return MapToEntityDto(entity);
+        }
+
+        [AbpAuthorize(PermissionNames.Pages_PointManagement_PointRanks_Delete)]
+        public override async Task Delete(EntityDto<Guid> input)
+        {
+            var entity = await _pointRankRepository.GetAsync(input.Id);
+            if (entity == null)
+                throw new EntityNotFoundException(typeof(PointRank), input.Id);
+
+            await _pointRankRepository.DeleteAsync(entity);
+        }
+
+        protected override void MapToEntity(PointRankDto input, PointRank pointRank)
+        {
+            ObjectMapper.Map(input, pointRank);
+        }
+
+        protected override async Task<PointRank> GetEntityByIdAsync(Guid id)
+        {
+            var pointRank = await Repository.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (pointRank == null)
+            {
+                throw new EntityNotFoundException(typeof(PointRank), id);
+            }
+
+            return pointRank;
+        }
+
+        protected override IQueryable<PointRank> ApplySorting(IQueryable<PointRank> query, PagedResultRequestDto input)
+        {
+            return query.OrderBy(r => r.MinPoint);
+        }
+
+        public async Task<IdentityResult> CheckNameOrMinPointAsync(Guid? expectedId, string name, int minPoint)
+        {
+            var entity = await _pointRankRepository.FirstOrDefaultAsync(b => b.Name == name);
+            if (entity != null && entity.Id != expectedId)
+            {
+                throw new UserFriendlyException(name + " 等级名称已存在");
+            }
+
+            entity = await _pointRankRepository.FirstOrDefaultAsync(b => b.MinPoint == minPoint);
+            if (entity != null && entity.Id != expectedId)
+            {
+                throw new UserFriendlyException(minPoint + " 最小积分已存在");
+            }
+
+            return IdentityResult.Success;
+        }
+
+        protected virtual void CheckErrors(IdentityResult identityResult)
+        {
+            identityResult.CheckErrors(LocalizationManager);
         }
     }
 }

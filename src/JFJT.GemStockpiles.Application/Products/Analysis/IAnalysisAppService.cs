@@ -2,11 +2,10 @@
 using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
-using JFJT.GemStockpiles.Products.Products.Dto;
 
-namespace JFJT.GemStockpiles.Products.Products
+namespace JFJT.GemStockpiles.Products.Analysis
 {
-    public interface IAnalysisAppService : IAsyncCrudAppService<ProductDto, Guid, PagedResultRequestDto, ProductDto, ProductDto>
+    public interface IAnalysisAppService
     {
 
     }

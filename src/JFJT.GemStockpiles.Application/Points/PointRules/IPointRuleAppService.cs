@@ -7,12 +7,8 @@ using JFJT.GemStockpiles.Points.PointRules.Dto;
 
 namespace JFJT.GemStockpiles.Points.PointRules
 {
-    public interface IPointRuleAppService : IAsyncCrudAppService<PointRuleDto, int, PagedResultRequestDto, PointRuleDto, PointRuleDto>
+    public interface IPointRuleAppService : IAsyncCrudAppService<PointRuleDto, Guid, PagedResultRequestDto, PointRuleDto, PointRuleDto>
     {
-        /// <summary>
-        /// 获取所有积分规则列表
-        /// </summary>
-        /// <returns></returns>
-        Task<ListResultDto<PointRuleDto>> GetAllPointRules();
+        Task<ListResultDto<PointActionDto>> GetAllPointActions();
     }
 }

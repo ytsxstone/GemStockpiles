@@ -1,10 +1,9 @@
-﻿using Abp.AutoMapper;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using JFJT.GemStockpiles.Models.Products;
+using Abp.AutoMapper;
 using Abp.Application.Services.Dto;
 using JFJT.GemStockpiles.Enums;
+using JFJT.GemStockpiles.Models.Products;
 
 namespace JFJT.GemStockpiles.Products.Products.Dto
 {

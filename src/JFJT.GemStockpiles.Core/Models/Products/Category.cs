@@ -6,7 +6,7 @@ namespace JFJT.GemStockpiles.Models.Products
     /// <summary>
     /// 产品分类表
     /// </summary>
-    public class Category : FullAudited<Guid>
+    public class Categorys : FullAudited<Guid>
     {
         /// <summary>
         /// 分类名称
@@ -16,7 +16,7 @@ namespace JFJT.GemStockpiles.Models.Products
         /// <summary>
         /// 父级ID
         /// </summary>
-        public Guid ParentId { get; set; }
+        public Guid? ParentId { get; set; }
 
         /// <summary>
         /// 备注

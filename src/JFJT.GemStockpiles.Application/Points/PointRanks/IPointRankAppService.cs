@@ -7,12 +7,8 @@ using JFJT.GemStockpiles.Points.PointRanks.Dto;
 
 namespace JFJT.GemStockpiles.Points.PointRanks
 {
-    public interface IPointRankAppService : IAsyncCrudAppService<PointRankDto, int, PagedResultRequestDto, PointRankDto, PointRankDto>
+    public interface IPointRankAppService : IAsyncCrudAppService<PointRankDto, Guid, PagedResultRequestDto, PointRankDto, PointRankDto>
     {
-        /// <summary>
-        /// 获取所有积分等级列表
-        /// </summary>
-        /// <returns></returns>
-        Task<ListResultDto<PointRankDto>> GetAllPointRanks();
+
     }
 }

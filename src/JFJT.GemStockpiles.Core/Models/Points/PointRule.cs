@@ -7,7 +7,7 @@ namespace JFJT.GemStockpiles.Models.Points
     /// <summary>
     /// 积分规则
     /// </summary>
-    public class PointRule : FullAudited
+    public class PointRule : FullAudited<Guid>
     {
         /// <summary>
         /// 名称

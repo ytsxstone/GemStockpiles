@@ -16,12 +16,12 @@ namespace JFJT.GemStockpiles.Enums
         /// </summary>
         Buy = 20,
         /// <summary>
-        /// 推荐
-        /// </summary>
-        Recommend = 30,
-        /// <summary>
         /// 注册
         /// </summary>
-        Register = 40
+        Register = 30,
+        /// <summary>
+        /// 推荐
+        /// </summary>
+        Recommend = 40
     }
 }

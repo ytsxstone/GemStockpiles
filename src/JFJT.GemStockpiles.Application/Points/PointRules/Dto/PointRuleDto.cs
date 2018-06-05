@@ -1,4 +1,5 @@
-﻿using Abp.AutoMapper;
+﻿using System;
+using Abp.AutoMapper;
 using Abp.Application.Services.Dto;
 using JFJT.GemStockpiles.Enums;
 using JFJT.GemStockpiles.Models.Points;
@@ -9,7 +10,7 @@ namespace JFJT.GemStockpiles.Points.PointRules.Dto
     /// 积分规则DTO
     /// </summary>
     [AutoMap(typeof(PointRule))]
-    public class PointRuleDto : EntityDto
+    public class PointRuleDto : EntityDto<Guid>
     {
         /// <summary>
         /// 名称

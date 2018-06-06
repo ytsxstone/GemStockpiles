@@ -12,9 +12,5 @@ namespace JFJT.GemStockpiles.Users
         Task<ListResultDto<RoleDto>> GetRoles();
 
         Task ChangeLanguage(ChangeUserLanguageDto input);
-
-        Task ChangePassword(ChangePasswordDto input);
-
-        Task<UserDto> UpdateUserInfo(ChangeUserInfoDto input);
     }
 }

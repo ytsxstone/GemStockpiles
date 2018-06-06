@@ -2,11 +2,15 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
+using Abp.UI;
 using AutoMapper;
 using Abp.Authorization;
+using Abp.Domain.Entities;
+using Abp.Domain.Repositories;
+using Abp.IdentityFramework;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
-using Abp.Domain.Repositories;
 using JFJT.GemStockpiles.Enums;
 using JFJT.GemStockpiles.Authorization;
 using JFJT.GemStockpiles.Models.Points;
@@ -30,6 +34,100 @@ namespace JFJT.GemStockpiles.Points.PointRules
         /// </summary>
         /// <returns></returns>
         public Task<ListResultDto<PointActionDto>> GetAllPointActions()
+        {
+            List<PointActionDto> actions = this.GetPointActions();
+
+            return Task.FromResult(new ListResultDto<PointActionDto>(
+                ObjectMapper.Map<List<PointActionDto>>(actions)
+            ));
+        }
+
+        [AbpAuthorize(PermissionNames.Pages_PointManagement_PointRules_Create)]
+        public override async Task<PointRuleDto> Create(PointRuleDto input)
+        {
+            CheckCreatePermission();
+
+            CheckErrors(await CheckActionNameAsync(input.Id, input.Name));
+
+            var entity = ObjectMapper.Map<PointRule>(input);
+
+            entity = await _pointRuleRepository.InsertAsync(entity);
+
+            return MapToEntityDto(entity);
+        }
+
+        [AbpAuthorize(PermissionNames.Pages_PointManagement_PointRules_Edit)]
+        public override async Task<PointRuleDto> Update(PointRuleDto input)
+        {
+            CheckUpdatePermission();
+
+            var entity = await _pointRuleRepository.GetAsync(input.Id);
+            if (entity == null)
+                throw new EntityNotFoundException(typeof(PointRule), input.Id);
+
+            CheckErrors(await CheckActionNameAsync(input.Id, input.Name));
+
+            MapToEntity(input, entity);
+
+            entity = await _pointRuleRepository.UpdateAsync(entity);
+
+            return MapToEntityDto(entity);
+        }
+
+        [AbpAuthorize(PermissionNames.Pages_PointManagement_PointRules_Delete)]
+        public override async Task Delete(EntityDto<Guid> input)
+        {
+            CheckDeletePermission();
+
+            var entity = await _pointRuleRepository.GetAsync(input.Id);
+            if (entity == null)
+                throw new EntityNotFoundException(typeof(PointRank), input.Id);
+
+            await _pointRuleRepository.DeleteAsync(entity);
+        }
+
+        protected override void MapToEntity(PointRuleDto input, PointRule pointRule)
+        {
+            ObjectMapper.Map(input, pointRule);
+        }
+
+        protected override async Task<PointRule> GetEntityByIdAsync(Guid id)
+        {
+            var entity = await Repository.FirstOrDefaultAsync(x => x.Id == id);
+            if (entity == null)
+            {
+                throw new EntityNotFoundException(typeof(PointRank), id);
+            }
+
+            return entity;
+        }
+
+        protected override IQueryable<PointRule> ApplySorting(IQueryable<PointRule> query, PagedResultRequestDto input)
+        {
+            return query.OrderBy(r => r.Name);
+        }
+
+        public async Task<IdentityResult> CheckActionNameAsync(Guid? expectedId, PointActionEnum name)
+        {
+            var entity = await _pointRuleRepository.FirstOrDefaultAsync(b => b.Name == name);
+            if (entity != null && entity.Id != expectedId)
+            {
+                throw new UserFriendlyException("积分方案已存在");
+            }
+
+            return IdentityResult.Success;
+        }
+
+        protected virtual void CheckErrors(IdentityResult identityResult)
+        {
+            identityResult.CheckErrors(LocalizationManager);
+        }
+
+        /// <summary>
+        /// 获取积分动作列表
+        /// </summary>
+        /// <returns></returns>
+        protected List<PointActionDto> GetPointActions()
         {
             List<PointActionDto> actions = new List<PointActionDto>();
 
@@ -61,118 +159,7 @@ namespace JFJT.GemStockpiles.Points.PointRules
                 actions.Add(new PointActionDto() { Id = (int)values.GetValue(i), Name = actionName });
             }
 
-            return Task.FromResult(new ListResultDto<PointActionDto>(
-                ObjectMapper.Map<List<PointActionDto>>(actions)
-            ));
+            return actions;
         }
-
-        //public override async Task<UserDto> Create(CreateUserDto input)
-        //{
-        //    CheckCreatePermission();
-
-        //    var user = ObjectMapper.Map<User>(input);
-
-        //    user.TenantId = AbpSession.TenantId;
-        //    user.Password = _passwordHasher.HashPassword(user, input.Password);
-        //    user.IsEmailConfirmed = true;
-
-        //    CheckErrors(await _userManager.CreateAsync(user));
-
-        //    if (input.RoleNames != null)
-        //    {
-        //        CheckErrors(await _userManager.SetRoles(user, input.RoleNames));
-        //    }
-
-        //    CurrentUnitOfWork.SaveChanges();
-
-        //    return MapToEntityDto(user);
-        //}
-
-        //public override async Task<UserDto> Update(UserDto input)
-        //{
-        //    CheckUpdatePermission();
-
-        //    var user = await _userManager.GetUserByIdAsync(input.Id);
-
-        //    MapToEntity(input, user);
-
-        //    CheckErrors(await _userManager.UpdateAsync(user));
-
-        //    if (input.RoleNames != null)
-        //    {
-        //        CheckErrors(await _userManager.SetRoles(user, input.RoleNames));
-        //    }
-
-        //    return await Get(input);
-        //}
-
-        //public override async Task Delete(EntityDto<long> input)
-        //{
-        //    var user = await _userManager.GetUserByIdAsync(input.Id);
-        //    await _userManager.DeleteAsync(user);
-        //}
-
-        //public async Task<ListResultDto<RoleDto>> GetRoles()
-        //{
-        //    var roles = await _roleRepository.GetAllListAsync();
-        //    return new ListResultDto<RoleDto>(ObjectMapper.Map<List<RoleDto>>(roles));
-        //}
-
-        //public async Task ChangeLanguage(ChangeUserLanguageDto input)
-        //{
-        //    await SettingManager.ChangeSettingForUserAsync(
-        //        AbpSession.ToUserIdentifier(),
-        //        LocalizationSettingNames.DefaultLanguage,
-        //        input.LanguageName
-        //    );
-        //}
-
-        //protected override User MapToEntity(CreateUserDto createInput)
-        //{
-        //    var user = ObjectMapper.Map<User>(createInput);
-        //    user.SetNormalizedNames();
-        //    return user;
-        //}
-
-        //protected override void MapToEntity(UserDto input, User user)
-        //{
-        //    ObjectMapper.Map(input, user);
-        //    user.SetNormalizedNames();
-        //}
-
-        //protected override UserDto MapToEntityDto(User user)
-        //{
-        //    var roles = _roleManager.Roles.Where(r => user.Roles.Any(ur => ur.RoleId == r.Id)).Select(r => r.NormalizedName);
-        //    var userDto = base.MapToEntityDto(user);
-        //    userDto.RoleNames = roles.ToArray();
-        //    return userDto;
-        //}
-
-        //protected override IQueryable<User> CreateFilteredQuery(PagedResultRequestDto input)
-        //{
-        //    return Repository.GetAllIncluding(x => x.Roles);
-        //}
-
-        //protected override async Task<User> GetEntityByIdAsync(long id)
-        //{
-        //    var user = await Repository.GetAllIncluding(x => x.Roles).FirstOrDefaultAsync(x => x.Id == id);
-
-        //    if (user == null)
-        //    {
-        //        throw new EntityNotFoundException(typeof(User), id);
-        //    }
-
-        //    return user;
-        //}
-
-        //protected override IQueryable<User> ApplySorting(IQueryable<User> query, PagedResultRequestDto input)
-        //{
-        //    return query.OrderBy(r => r.UserName);
-        //}
-
-        //protected virtual void CheckErrors(IdentityResult identityResult)
-        //{
-        //    identityResult.CheckErrors(LocalizationManager);
-        //}
     }
 }

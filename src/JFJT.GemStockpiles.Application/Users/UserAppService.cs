@@ -100,6 +100,13 @@ namespace JFJT.GemStockpiles.Users
             await _userManager.DeleteAsync(user);
         }
 
+        public async Task ChangePassword(ChangePasswordDto input)
+        {
+            var user = await _userManager.GetUserByIdAsync(input.Id);
+
+            CheckErrors(await _userManager.ChangePasswordAsync(user, input.OldPassword, input.NewPassword));
+        }
+
         public async Task<UserDto> UpdateUserInfo(ChangeUserInfoDto input)
         {
             var user = await _userManager.GetUserByIdAsync(input.Id);
@@ -109,13 +116,6 @@ namespace JFJT.GemStockpiles.Users
             CheckErrors(await _userManager.UpdateAsync(user));
 
             return await Get(input);
-        }
-
-        public async Task ChangePassword(ChangePasswordDto input)
-        {
-            var user = await _userManager.GetUserByIdAsync(input.Id);
-
-            CheckErrors(await _userManager.ChangePasswordAsync(user, input.OldPassword, input.NewPassword));
         }
 
         public async Task<ListResultDto<RoleDto>> GetRoles()

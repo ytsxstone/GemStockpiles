@@ -62,6 +62,8 @@ namespace JFJT.GemStockpiles.Points.PointRanks
         [AbpAuthorize(PermissionNames.Pages_PointManagement_PointRanks_Delete)]
         public override async Task Delete(EntityDto<Guid> input)
         {
+            CheckDeletePermission();
+
             var entity = await _pointRankRepository.GetAsync(input.Id);
             if (entity == null)
                 throw new EntityNotFoundException(typeof(PointRank), input.Id);
@@ -76,14 +78,13 @@ namespace JFJT.GemStockpiles.Points.PointRanks
 
         protected override async Task<PointRank> GetEntityByIdAsync(Guid id)
         {
-            var pointRank = await Repository.FirstOrDefaultAsync(x => x.Id == id);
-
-            if (pointRank == null)
+            var entity = await Repository.FirstOrDefaultAsync(x => x.Id == id);
+            if (entity == null)
             {
                 throw new EntityNotFoundException(typeof(PointRank), id);
             }
 
-            return pointRank;
+            return entity;
         }
 
         protected override IQueryable<PointRank> ApplySorting(IQueryable<PointRank> query, PagedResultRequestDto input)

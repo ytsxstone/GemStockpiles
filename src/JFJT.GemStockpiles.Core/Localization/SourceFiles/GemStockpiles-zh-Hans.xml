@@ -32,8 +32,8 @@
     <text name="Users" value="用户管理" />
     <text name="Tenants" value="租户管理" />
     <text name="PointManagement" value="积分设置" />
-    <text name="PointRules" value="积分规则" />
-    <text name="PointRanks" value="积分体系" />
+    <text name="PointRules" value="积分方案" />
+    <text name="PointRanks" value="积分等级" />
     <text name="ProductManagement" value="商品管理" />
     <text name="ProductList" value="商品列表" />
     <text name="ProductAnalysis" value="商品分析" />

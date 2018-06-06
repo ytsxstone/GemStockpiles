@@ -1,8 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Abp;
 using Abp.Authorization;
-using JFJT.GemStockpiles.Users;
+using Abp.IdentityFramework;
 using JFJT.GemStockpiles.Users.Dto;
+using JFJT.GemStockpiles.Authorization.Users;
 
 namespace JFJT.GemStockpiles.Common
 {
@@ -10,13 +12,13 @@ namespace JFJT.GemStockpiles.Common
     /// 存放公共的API接口, 必须登录才能进行操作
     /// </summary>
     [AbpAuthorize]
-    public class CommonAppService : ICommonAppService
+    public class CommonAppService : AbpServiceBase, ICommonAppService
     {
-        private readonly UserAppService _userAppService;
+        private readonly UserManager _userManager;
 
-        public CommonAppService(UserAppService userAppService)
+        public CommonAppService(UserManager userManager)
         {
-            _userAppService = userAppService;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -26,7 +28,9 @@ namespace JFJT.GemStockpiles.Common
         /// <returns></returns>
         public async Task ChangePassword(ChangePasswordDto input)
         {
-            await _userAppService.ChangePassword(input);
+            var user = await _userManager.GetUserByIdAsync(input.Id);
+
+            CheckErrors(await _userManager.ChangePasswordAsync(user, input.OldPassword, input.NewPassword));
         }
 
         /// <summary>
@@ -36,7 +40,18 @@ namespace JFJT.GemStockpiles.Common
         /// <returns></returns>
         public async Task<UserDto> UpdateUserInfo(ChangeUserInfoDto input)
         {
-            return await _userAppService.UpdateUserInfo(input);
+            var user = await _userManager.GetUserByIdAsync(input.Id);
+
+            user.Name = input.Name;
+
+            CheckErrors(await _userManager.UpdateAsync(user));
+
+            return ObjectMapper.Map<UserDto>(user);
+        }
+
+        protected virtual void CheckErrors(IdentityResult identityResult)
+        {
+            identityResult.CheckErrors(LocalizationManager);
         }
     }
 }

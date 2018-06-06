@@ -23,9 +23,9 @@
     
     <!--权限名称-->
     <text name="Pages" value="页面" />
-    <text name="View" value="查看" />
-    <text name="Create" value="新增" />
-    <text name="Edit" value="编辑" />
+    <text name="View" value="浏览" />
+    <text name="Create" value="增加" />
+    <text name="Edit" value="修改" />
     <text name="Delete" value="删除" />
     <text name="SystemManagement" value="系统管理" />
     <text name="Roles" value="角色管理" />

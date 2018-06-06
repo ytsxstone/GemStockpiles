@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Abp.UI;
-using AutoMapper;
 using Abp.Authorization;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
@@ -92,7 +91,7 @@ namespace JFJT.GemStockpiles.Points.PointRanks
             return query.OrderBy(r => r.MinPoint);
         }
 
-        public async Task<IdentityResult> CheckNameOrMinPointAsync(Guid? expectedId, string name, int minPoint)
+        protected async Task<IdentityResult> CheckNameOrMinPointAsync(Guid? expectedId, string name, int minPoint)
         {
             var entity = await _pointRankRepository.FirstOrDefaultAsync(b => b.Name == name);
             if (entity != null && entity.Id != expectedId)

@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Abp.AutoMapper;
 using Abp.Extensions;
 using Abp.Authorization;
 using Abp.Linq.Extensions;
@@ -16,7 +15,6 @@ using JFJT.GemStockpiles.Common.Dto;
 using JFJT.GemStockpiles.Authorization;
 using JFJT.GemStockpiles.Authorization.Roles;
 using JFJT.GemStockpiles.Authorization.Users;
-using Abp.MultiTenancy;
 
 namespace JFJT.GemStockpiles.Roles
 {
@@ -114,14 +112,6 @@ namespace JFJT.GemStockpiles.Roles
 
         public Task<ListResultDto<PermissionTreeDto>> GetTreePermissions()
         {
-            #region
-            //var permissions = PermissionManager.GetAllPermissions();
-
-            //return Task.FromResult(new ListResultDto<FlatPermissionDto>(
-            //    ObjectMapper.Map<List<FlatPermissionDto>>(permissions).OrderBy(p => p.Name).ToList()
-            //));
-            #endregion
-
             List<PermissionTreeDto> treeList = new List<PermissionTreeDto>();
 
             var permissions = PermissionManager.GetAllPermissions();
@@ -143,7 +133,7 @@ namespace JFJT.GemStockpiles.Roles
         /// <param name="parentName"></param>
         /// <param name="parentLevel"></param>
         /// <returns></returns>
-        public List<PermissionTreeDto> GetTreePermissionList(ListResultDto<FlatPermissionDto> permissionData, string parentName, int parentLevel)
+        protected List<PermissionTreeDto> GetTreePermissionList(ListResultDto<FlatPermissionDto> permissionData, string parentName, int parentLevel)
         {
             List<PermissionTreeDto> treeList = new List<PermissionTreeDto>();
 

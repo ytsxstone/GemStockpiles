@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using Abp.UI;
-using AutoMapper;
 using Abp.Authorization;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
@@ -27,19 +26,6 @@ namespace JFJT.GemStockpiles.Points.PointRules
             : base(pointRuleRepository)
         {
             _pointRuleRepository = pointRuleRepository;
-        }
-
-        /// <summary>
-        /// 获取所有积分动作列表
-        /// </summary>
-        /// <returns></returns>
-        public Task<ListResultDto<PointActionDto>> GetAllPointActions()
-        {
-            List<PointActionDto> actions = this.GetPointActions();
-
-            return Task.FromResult(new ListResultDto<PointActionDto>(
-                ObjectMapper.Map<List<PointActionDto>>(actions)
-            ));
         }
 
         [AbpAuthorize(PermissionNames.Pages_PointManagement_PointRules_Create)]
@@ -86,6 +72,19 @@ namespace JFJT.GemStockpiles.Points.PointRules
             await _pointRuleRepository.DeleteAsync(entity);
         }
 
+        /// <summary>
+        /// 获取所有积分动作列表
+        /// </summary>
+        /// <returns></returns>
+        public Task<ListResultDto<PointActionDto>> GetAllPointActions()
+        {
+            List<PointActionDto> actions = this.GetPointActions();
+
+            return Task.FromResult(new ListResultDto<PointActionDto>(
+                ObjectMapper.Map<List<PointActionDto>>(actions)
+            ));
+        }
+
         protected override void MapToEntity(PointRuleDto input, PointRule pointRule)
         {
             ObjectMapper.Map(input, pointRule);
@@ -107,7 +106,7 @@ namespace JFJT.GemStockpiles.Points.PointRules
             return query.OrderBy(r => r.Name);
         }
 
-        public async Task<IdentityResult> CheckActionNameAsync(Guid? expectedId, PointActionEnum name)
+        protected async Task<IdentityResult> CheckActionNameAsync(Guid? expectedId, PointActionEnum name)
         {
             var entity = await _pointRuleRepository.FirstOrDefaultAsync(b => b.Name == name);
             if (entity != null && entity.Id != expectedId)

@@ -15,6 +15,7 @@ using Abp.Extensions;
 using JFJT.GemStockpiles.Authentication.JwtBearer;
 using JFJT.GemStockpiles.Configuration;
 using JFJT.GemStockpiles.Identity;
+using JFJT.GemStockpiles.Models.Config;
 
 #if FEATURE_SIGNALR
 using Microsoft.AspNet.SignalR;
@@ -45,6 +46,8 @@ namespace JFJT.GemStockpiles.Web.Host.Startup
             services.AddMvc(
                 options => options.Filters.Add(new CorsAuthorizationFilterFactory(_defaultCorsPolicyName))
             );
+
+            services.Configure<AppSettings>(_appConfiguration.GetSection("AppSettings"));
 
             IdentityRegistrar.Register(services);
             AuthConfigurer.Configure(services, _appConfiguration);

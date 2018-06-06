@@ -70,6 +70,16 @@ namespace JFJT.GemStockpiles.Points.PointRanks
             await _pointRankRepository.DeleteAsync(entity);
         }
 
+        /// <summary>
+        /// 积分头像上传
+        /// </summary>
+        /// <returns></returns>
+        [AbpAuthorize(PermissionNames.Pages_PointManagement_PointRanks_Create, PermissionNames.Pages_PointManagement_PointRanks_Edit)]
+        public UploadAvatarDto UploadAvatar()
+        {
+            return new UploadAvatarDto { Name = "bc7521e033abdd1e92222d733590f104.jpg" };
+        }
+
         protected override void MapToEntity(PointRankDto input, PointRank pointRank)
         {
             ObjectMapper.Map(input, pointRank);

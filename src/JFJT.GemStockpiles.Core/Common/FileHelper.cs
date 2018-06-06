@@ -33,26 +33,26 @@ namespace JFJT.GemStockpiles.Common
             _appSettings = appSettings;
         }
 
-        private string GetFileTypeFolder(FileType filetype, bool IsBase = false)
-        {
-            string _path = IsBase ? BasePath : DriveFolder;
-            switch (filetype)
-            {
-                case FileType.image:
-                    _path += ImageFileName;
-                    break;
-                case FileType.video:
-                    _path += VideoFileName;
-                    break;
-            }
-            return _path;
-        }
+        //private string GetFileTypeFolder(FileType filetype, bool IsBase = false)
+        //{
+        //    string _path = IsBase ? BasePath : DriveFolder;
+        //    switch (filetype)
+        //    {
+        //        case FileType.image:
+        //            _path += ImageFileName;
+        //            break;
+        //        case FileType.video:
+        //            _path += VideoFileName;
+        //            break;
+        //    }
+        //    return _path;
+        //}
 
         public SaveFileResult GetSaveFilePath(FileType fileType, string fileName)
         {
             string _folder = DateTime.Now.ToString("yyyy-MM") + "/";
-            string driveFolder = GetFileTypeFolder(fileType) + _folder;
-            string baseFolder = GetFileTypeFolder(fileType, true) + _folder;
+            string driveFolder = ""; //GetFileTypeFolder(fileType) + _folder;
+            string baseFolder = ""; //GetFileTypeFolder(fileType, true) + _folder;
 
             string bas =Path.Combine(Directory.GetCurrentDirectory() , "wwwroot");//获取服务器目录
             if (!Directory.Exists(bas + baseFolder))
@@ -94,17 +94,17 @@ namespace JFJT.GemStockpiles.Common
             long size = 0;
             Error = "";
 
-            switch (filetype)
-            {
-                case FileType.image:
-                    extensValue = ImgExts;
-                    size = Convert.ToInt32(ImgFileLength) * 1024;
-                    break;
-                case FileType.video:
-                    extensValue = VideoExts;
-                    size = Convert.ToInt32(VideoFileLength) * 1024;
-                    break;
-            }
+            //switch (filetype)
+            //{
+            //    case FileType.image:
+            //        extensValue = ImgExts;
+            //        size = Convert.ToInt32(ImgFileLength) * 1024;
+            //        break;
+            //    case FileType.video:
+            //        extensValue = VideoExts;
+            //        size = Convert.ToInt32(VideoFileLength) * 1024;
+            //        break;
+            //}
 
             if (!ValidateExtension(extensValue, fileName))
             {

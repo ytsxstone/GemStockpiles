@@ -2,7 +2,7 @@
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using JFJT.GemStockpiles.Roles.Dto;
-using JFJT.GemStockpiles.Common.Dto;
+using JFJT.GemStockpiles.Commons.Dto;
 
 namespace JFJT.GemStockpiles.Roles
 {

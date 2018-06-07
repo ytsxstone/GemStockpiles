@@ -15,7 +15,7 @@ using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using JFJT.GemStockpiles.Roles.Dto;
 using JFJT.GemStockpiles.Users.Dto;
-using JFJT.GemStockpiles.Common.Dto;
+using JFJT.GemStockpiles.Commons.Dto;
 using JFJT.GemStockpiles.Authorization;
 using JFJT.GemStockpiles.Authorization.Roles;
 using JFJT.GemStockpiles.Authorization.Users;

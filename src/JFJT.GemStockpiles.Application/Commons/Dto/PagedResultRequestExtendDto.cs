@@ -1,7 +1,7 @@
 ﻿using System;
 using Abp.Application.Services.Dto;
 
-namespace JFJT.GemStockpiles.Common.Dto
+namespace JFJT.GemStockpiles.Commons.Dto
 {
     /// <summary>
     /// 分页结果请求扩展Dto

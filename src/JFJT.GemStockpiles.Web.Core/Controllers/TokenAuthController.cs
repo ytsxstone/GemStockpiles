@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Abp.Authorization;
 using Abp.Authorization.Users;
 using Abp.MultiTenancy;
@@ -17,6 +18,8 @@ using JFJT.GemStockpiles.Authorization;
 using JFJT.GemStockpiles.Authorization.Users;
 using JFJT.GemStockpiles.Models.TokenAuth;
 using JFJT.GemStockpiles.MultiTenancy;
+using JFJT.GemStockpiles.Models.Config;
+using JFJT.GemStockpiles.Helpers;
 
 namespace JFJT.GemStockpiles.Controllers
 {
@@ -30,6 +33,8 @@ namespace JFJT.GemStockpiles.Controllers
         private readonly IExternalAuthConfiguration _externalAuthConfiguration;
         private readonly IExternalAuthManager _externalAuthManager;
         private readonly UserRegistrationManager _userRegistrationManager;
+        private readonly IOptions<AppSettings> _appSettings;
+        private readonly UploadHelper uploadHelper;
 
         public TokenAuthController(
             LogInManager logInManager,
@@ -38,7 +43,8 @@ namespace JFJT.GemStockpiles.Controllers
             TokenAuthConfiguration configuration,
             IExternalAuthConfiguration externalAuthConfiguration,
             IExternalAuthManager externalAuthManager,
-            UserRegistrationManager userRegistrationManager)
+            UserRegistrationManager userRegistrationManager,
+            IOptions<AppSettings> appSettings)
         {
             _logInManager = logInManager;
             _tenantCache = tenantCache;
@@ -47,6 +53,8 @@ namespace JFJT.GemStockpiles.Controllers
             _externalAuthConfiguration = externalAuthConfiguration;
             _externalAuthManager = externalAuthManager;
             _userRegistrationManager = userRegistrationManager;
+            _appSettings = appSettings;
+            uploadHelper = new UploadHelper(appSettings);
         }
 
         [HttpPost]
@@ -59,6 +67,9 @@ namespace JFJT.GemStockpiles.Controllers
             );
 
             var accessToken = CreateAccessToken(CreateJwtClaims(loginResult.Identity));
+
+            //删除临时目录
+            uploadHelper.ClearTempDirectory(loginResult.User.Id);
 
             return new AuthenticateResultModel
             {

@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace JFJT.GemStockpiles.Points.PointRules.Dto
+namespace JFJT.GemStockpiles.Commons.Dto
 {
-    public class PointActionDto
+    public class IdAndNameDto
     {
         public int Id { get; set; }
 

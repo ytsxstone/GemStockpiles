@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
 using Abp.UI;
 using Abp.Authorization;
@@ -9,8 +10,11 @@ using Abp.Domain.Repositories;
 using Abp.IdentityFramework;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
+using JFJT.GemStockpiles.Helpers;
+using JFJT.GemStockpiles.Sessions.Dto;
 using JFJT.GemStockpiles.Authorization;
 using JFJT.GemStockpiles.Models.Points;
+using JFJT.GemStockpiles.Models.Config;
 using JFJT.GemStockpiles.Points.PointRanks.Dto;
 
 namespace JFJT.GemStockpiles.Points.PointRanks
@@ -19,11 +23,15 @@ namespace JFJT.GemStockpiles.Points.PointRanks
     public class PointRankAppService : AsyncCrudAppService<PointRank, PointRankDto, Guid, PagedResultRequestDto, PointRankDto, PointRankDto>, IPointRankAppService
     {
         private readonly IRepository<PointRank, Guid> _pointRankRepository;
+        private readonly IOptions<AppSettings> _appSettings;
+        private readonly UploadHelper uploadHelper;
 
-        public PointRankAppService(IRepository<PointRank, Guid> pointRankRepository)
+        public PointRankAppService(IRepository<PointRank, Guid> pointRankRepository, IOptions<AppSettings> appSettings)
             : base(pointRankRepository)
         {
             _pointRankRepository = pointRankRepository;
+            _appSettings = appSettings;
+            uploadHelper = new UploadHelper(appSettings);
         }
 
         [AbpAuthorize(PermissionNames.Pages_PointManagement_PointRanks_Create)]
@@ -37,6 +45,12 @@ namespace JFJT.GemStockpiles.Points.PointRanks
 
             entity = await _pointRankRepository.InsertAsync(entity);
 
+            //移动文件
+            if (!string.IsNullOrWhiteSpace(entity.Avatar))
+            {
+                uploadHelper.MoveFile(entity.Avatar, UploadType.PointAvatar, FileType.Image, AbpSession.UserId);
+            }
+
             return MapToEntityDto(entity);
         }
 
@@ -49,11 +63,21 @@ namespace JFJT.GemStockpiles.Points.PointRanks
             if (entity == null)
                 throw new EntityNotFoundException(typeof(PointRank), input.Id);
 
+            var oldAvatar = entity.Avatar;
+
             CheckErrors(await CheckNameOrMinPointAsync(input.Id, input.Name, input.MinPoint));
 
             MapToEntity(input, entity);
 
             entity = await _pointRankRepository.UpdateAsync(entity);
+
+            // 头像文件处理
+            if (oldAvatar != entity.Avatar)
+            {
+                uploadHelper.MoveFile(entity.Avatar, UploadType.PointAvatar, FileType.Image, AbpSession.UserId);
+
+                uploadHelper.DeleteFile(oldAvatar, UploadType.PointAvatar, FileType.Image);
+            }
 
             return MapToEntityDto(entity);
         }
@@ -68,16 +92,12 @@ namespace JFJT.GemStockpiles.Points.PointRanks
                 throw new EntityNotFoundException(typeof(PointRank), input.Id);
 
             await _pointRankRepository.DeleteAsync(entity);
-        }
 
-        /// <summary>
-        /// 积分头像上传
-        /// </summary>
-        /// <returns></returns>
-        [AbpAuthorize(PermissionNames.Pages_PointManagement_PointRanks_Create, PermissionNames.Pages_PointManagement_PointRanks_Edit)]
-        public UploadAvatarDto UploadAvatar()
-        {
-            return new UploadAvatarDto { Name = "bc7521e033abdd1e92222d733590f104.jpg" };
+            //删除
+            if (!string.IsNullOrWhiteSpace(entity.Avatar))
+            {
+                uploadHelper.DeleteFile(entity.Avatar, UploadType.PointAvatar, FileType.Image);
+            }
         }
 
         protected override void MapToEntity(PointRankDto input, PointRank pointRank)

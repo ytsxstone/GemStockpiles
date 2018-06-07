@@ -11,8 +11,10 @@ using Abp.IdentityFramework;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using JFJT.GemStockpiles.Enums;
+using JFJT.GemStockpiles.Helpers;
 using JFJT.GemStockpiles.Authorization;
 using JFJT.GemStockpiles.Models.Points;
+using JFJT.GemStockpiles.Commons.Dto;
 using JFJT.GemStockpiles.Points.PointRules.Dto;
 
 namespace JFJT.GemStockpiles.Points.PointRules
@@ -76,12 +78,18 @@ namespace JFJT.GemStockpiles.Points.PointRules
         /// 获取所有积分动作列表
         /// </summary>
         /// <returns></returns>
-        public Task<ListResultDto<PointActionDto>> GetAllPointActions()
+        public Task<ListResultDto<IdAndNameDto>> GetAllPointActions()
         {
-            List<PointActionDto> actions = this.GetPointActions();
+            List<IdAndNameDto> actions = new List<IdAndNameDto>();
 
-            return Task.FromResult(new ListResultDto<PointActionDto>(
-                ObjectMapper.Map<List<PointActionDto>>(actions)
+            foreach (PointActionEnum item in Enum.GetValues(typeof(PointActionEnum)))
+            {
+                string desc = EnumHelper.GetEnumDescription(typeof(PointActionEnum), (int)item);
+                actions.Add(new IdAndNameDto() { Id = (int)item, Name = desc });
+            }
+
+            return Task.FromResult(new ListResultDto<IdAndNameDto>(
+                ObjectMapper.Map<List<IdAndNameDto>>(actions)
             ));
         }
 
@@ -120,45 +128,6 @@ namespace JFJT.GemStockpiles.Points.PointRules
         protected virtual void CheckErrors(IdentityResult identityResult)
         {
             identityResult.CheckErrors(LocalizationManager);
-        }
-
-        /// <summary>
-        /// 获取积分动作列表
-        /// </summary>
-        /// <returns></returns>
-        protected List<PointActionDto> GetPointActions()
-        {
-            List<PointActionDto> actions = new List<PointActionDto>();
-
-            string[] keys = Enum.GetNames(typeof(PointActionEnum));
-            Array values = Enum.GetValues(typeof(PointActionEnum));
-
-            string actionName = "";
-            for (int i = 0; i < keys.Length; i++)
-            {
-                switch (keys[i])
-                {
-                    case "Upload":
-                        actionName = "上传商品";
-                        break;
-                    case "Buy":
-                        actionName = "购买商品";
-                        break;
-                    case "Register":
-                        actionName = "注册";
-                        break;
-                    case "Recommend":
-                        actionName = "推荐";
-                        break;
-                    default:
-                        actionName = "未定义";
-                        break;
-                }
-
-                actions.Add(new PointActionDto() { Id = (int)values.GetValue(i), Name = actionName });
-            }
-
-            return actions;
         }
     }
 }

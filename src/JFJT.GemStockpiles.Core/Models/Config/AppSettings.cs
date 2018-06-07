@@ -4,6 +4,9 @@ namespace JFJT.GemStockpiles.Models.Config
 {
     public class AppSettings
     {
-        public PointAvatarUploadConfig PointAvatarUploadConfig { get; set; }
+        /// <summary>
+        /// 文件上传配置
+        /// </summary>
+        public UploadConfig UploadConfig { get; set; }
     }
 }

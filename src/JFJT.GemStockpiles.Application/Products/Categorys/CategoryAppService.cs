@@ -52,5 +52,47 @@ namespace JFJT.GemStockpiles.Products.Category
                 ObjectMapper.Map<List<CategoryDto>>(entity)
             ));
         }
+
+
+        public Task<ListResultDto<CategoryTreeDto>> GetTreeCategory()
+        {
+            List<CategoryTreeDto> treeList = new List<CategoryTreeDto>();
+
+            var Category = _categoryRepository.GetAllList();
+            var treeData = new ListResultDto<Categorys>(ObjectMapper.Map<List<Categorys>>(Category));
+
+            if (treeData != null)
+            {
+                treeList = GetTreePermissionList(treeData,null, 0);
+            }
+
+            return Task.FromResult(new ListResultDto<CategoryTreeDto>(ObjectMapper.Map<List<CategoryTreeDto>>(treeList)));
+        }
+
+        /// <summary>
+        /// 递归生成分类tree
+        /// </summary>
+        /// <param name="categoryData"></param>
+        /// <param name="parentId"></param>
+        /// <param name="parentLevel"></param>
+        /// <returns></returns>
+        public List<CategoryTreeDto> GetTreePermissionList(ListResultDto<Categorys> categoryData, Guid? parentId, int parentLevel)
+        {
+            List<CategoryTreeDto> treeList = new List<CategoryTreeDto>();
+
+            var level = parentLevel + 1;
+            var treeData = categoryData.Items.Where(b => b.ParentId == parentId).ToList();
+
+            foreach (var item in treeData)
+            {
+                var children = GetTreePermissionList(categoryData, item.Id, level);
+                var model = new CategoryTreeDto() { title = item.Name, level = level };
+                model.children = children.Count <= 0 ? null : children;
+                model.expand = level <= 2 ? true : false;
+
+                treeList.Add(model);
+            }
+            return treeList;
+        }
     }
 }

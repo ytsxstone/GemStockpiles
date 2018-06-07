@@ -1,11 +1,10 @@
-﻿using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Xunit;
 using Shouldly;
-using Xunit;
-using Abp.Application.Services.Dto;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using JFJT.GemStockpiles.Users;
 using JFJT.GemStockpiles.Users.Dto;
-using JFJT.GemStockpiles.Common.Dto;
+using JFJT.GemStockpiles.Commons.Dto;
 
 namespace JFJT.GemStockpiles.Tests.Users
 {

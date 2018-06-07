@@ -10,5 +10,7 @@ namespace JFJT.GemStockpiles.Products.Category
     public interface ICategoryAppService : IAsyncCrudAppService<CategoryDto, Guid, PagedResultRequestDto, CategoryDto, CategoryDto>
     {
         Task<ListResultDto<CategoryDto>> GetParent();
+
+        Task<ListResultDto<CategoryTreeDto>> GetTreeCategory();
     }
 }

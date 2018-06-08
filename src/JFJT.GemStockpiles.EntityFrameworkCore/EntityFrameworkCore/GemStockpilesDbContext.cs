@@ -25,6 +25,7 @@ namespace JFJT.GemStockpiles.EntityFrameworkCore
 
         public DbSet<PointRule> PointRule { get; set; }
         public DbSet<PointRank> PointRank { get; set; }
+        public DbSet<PointLog> PointLog { get; set; }
 
         public DbSet<Categorys> Category { get; set; }
         public DbSet<CategoryAttribute> CategoryAttribute { get; set; }

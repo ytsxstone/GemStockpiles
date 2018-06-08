@@ -496,6 +496,24 @@ namespace JFJT.GemStockpiles.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PointLog",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    ActionDesc = table.Column<string>(nullable: true),
+                    ActionTime = table.Column<DateTime>(nullable: false),
+                    ActionType = table.Column<int>(nullable: false),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    MemberId = table.Column<int>(nullable: false),
+                    Points = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PointLog", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PointRank",
                 columns: table => new
                 {
@@ -1380,6 +1398,9 @@ namespace JFJT.GemStockpiles.Migrations
 
             migrationBuilder.DropTable(
                 name: "CustomerCompanyLicense");
+
+            migrationBuilder.DropTable(
+                name: "PointLog");
 
             migrationBuilder.DropTable(
                 name: "PointRank");

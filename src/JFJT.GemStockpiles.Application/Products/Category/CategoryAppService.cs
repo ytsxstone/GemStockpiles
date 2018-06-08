@@ -38,6 +38,13 @@ namespace JFJT.GemStockpiles.Products.Category
 
             var entity = ObjectMapper.Map<Categorys>(input);
 
+            if (input.ParentId != null) {
+
+
+
+            }
+
+
             entity = await _categoryRepository.InsertAsync(entity);
 
             return MapToEntityDto(entity);
@@ -53,7 +60,7 @@ namespace JFJT.GemStockpiles.Products.Category
             ));
         }
 
-
+        #region Tree
         public Task<ListResultDto<CategoryTreeDto>> GetTreeCategory()
         {
             List<CategoryTreeDto> treeList = new List<CategoryTreeDto>();
@@ -76,7 +83,7 @@ namespace JFJT.GemStockpiles.Products.Category
         /// <param name="parentId"></param>
         /// <param name="parentLevel"></param>
         /// <returns></returns>
-        public List<CategoryTreeDto> GetTreePermissionList(ListResultDto<Categorys> categoryData, Guid? parentId, int parentLevel)
+        private List<CategoryTreeDto> GetTreePermissionList(ListResultDto<Categorys> categoryData, Guid? parentId, int parentLevel)
         {
             List<CategoryTreeDto> treeList = new List<CategoryTreeDto>();
 
@@ -94,5 +101,48 @@ namespace JFJT.GemStockpiles.Products.Category
             }
             return treeList;
         }
+        #endregion
+
+        #region Cascader
+        public Task<ListResultDto<CategoryCascaderDto>> GetCascaderCategory()
+        {
+            List<CategoryCascaderDto> treeList = new List<CategoryCascaderDto>();
+
+            var Category = _categoryRepository.GetAllList();
+            var treeData = new ListResultDto<Categorys>(ObjectMapper.Map<List<Categorys>>(Category));
+
+            if (treeData != null)
+            {
+                treeList = GetCascaderPermissionList(treeData, null, 0);
+            }
+
+            return Task.FromResult(new ListResultDto<CategoryCascaderDto>(ObjectMapper.Map<List<CategoryCascaderDto>>(treeList)));
+        }
+
+        /// <summary>
+        /// 递归生成分类Cascader
+        /// </summary>
+        /// <param name="categoryData"></param>
+        /// <param name="parentId"></param>
+        /// <param name="parentLevel"></param>
+        /// <returns></returns>
+        private List<CategoryCascaderDto> GetCascaderPermissionList(ListResultDto<Categorys> categoryData, Guid? parentId, int parentLevel)
+        {
+            List<CategoryCascaderDto> treeList = new List<CategoryCascaderDto>();
+
+            var level = parentLevel + 1;
+            var treeData = categoryData.Items.Where(b => b.ParentId == parentId).ToList();
+
+            foreach (var item in treeData)
+            {
+                var children = GetCascaderPermissionList(categoryData, item.Id, level);
+                var model = new CategoryCascaderDto() { label = item.Name, value = item.Id };
+                model.children = children.Count <= 0 ? null : children;
+
+                treeList.Add(model);
+            }
+            return treeList;
+        }
+        #endregion
     }
 }

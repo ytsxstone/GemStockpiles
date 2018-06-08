@@ -288,10 +288,11 @@ namespace JFJT.GemStockpiles.Helpers
             //获取服务器目录
             string rootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
 
+            //删除目录及子文件
             string tempDirectory = $"{rootPath}/{tempRelativePath}";
             if (Directory.Exists(tempDirectory))
             {
-                Directory.Delete(tempDirectory);
+                Directory.Delete(tempDirectory, true);
             }
         }
         #endregion

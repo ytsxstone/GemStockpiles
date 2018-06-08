@@ -12,5 +12,6 @@ namespace JFJT.GemStockpiles.Products.Category
         Task<ListResultDto<CategoryDto>> GetParent();
 
         Task<ListResultDto<CategoryTreeDto>> GetTreeCategory();
+        Task<ListResultDto<CategoryCascaderDto>> GetCascaderCategory();
     }
 }

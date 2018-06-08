@@ -17,7 +17,7 @@ using System;
 namespace JFJT.GemStockpiles.Migrations
 {
     [DbContext(typeof(GemStockpilesDbContext))]
-    [Migration("20180605124519_InitialCreate")]
+    [Migration("20180608092714_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1100,6 +1100,30 @@ namespace JFJT.GemStockpiles.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CustomerCompanyLicense");
+                });
+
+            modelBuilder.Entity("JFJT.GemStockpiles.Models.Points.PointLog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ActionDesc");
+
+                    b.Property<DateTime>("ActionTime");
+
+                    b.Property<int>("ActionType");
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<int>("MemberId");
+
+                    b.Property<int>("Points");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PointLog");
                 });
 
             modelBuilder.Entity("JFJT.GemStockpiles.Models.Points.PointRank", b =>

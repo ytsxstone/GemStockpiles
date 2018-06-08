@@ -17,7 +17,7 @@ namespace JFJT.GemStockpiles.Models.Products
         /// <summary>
         /// 媒体类型
         /// </summary>
-        public ProductMediaTypeEnum Type { get; set; }
+        public MediaTypeEnum Type { get; set; }
 
         /// <summary>
         /// url

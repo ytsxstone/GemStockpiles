@@ -12,6 +12,7 @@ using JFJT.GemStockpiles.Commons.Dto;
 using JFJT.GemStockpiles.Models.Products;
 using JFJT.GemStockpiles.Products.CategoryAttributes.Dto;
 using Microsoft.AspNetCore.Identity;
+using JFJT.GemStockpiles.Products.Category.Dto;
 
 namespace JFJT.GemStockpiles.Products.CategoryAttributes
 {
@@ -23,6 +24,22 @@ namespace JFJT.GemStockpiles.Products.CategoryAttributes
          : base(categoryAttributRepository)
         {
             _categoryAttributRepository = categoryAttributRepository;
+        }
+
+        public Task<ListResultDto<CategoryCascaderDto>> GetAllAttr()
+        {
+            List<CategoryCascaderDto> listData = new List<CategoryCascaderDto>();
+            var entity = _categoryAttributRepository.GetAllList();
+            if (entity != null && entity.Count > 0) {
+                foreach (var item in entity)
+                {
+                    var model = new CategoryCascaderDto() { label = item.Name, value = item.Id };
+                    listData.Add(model);
+                }
+            }
+            return Task.FromResult(new ListResultDto<CategoryCascaderDto>(
+                ObjectMapper.Map<List<CategoryCascaderDto>>(listData)
+            ));
         }
 
         /// <summary>

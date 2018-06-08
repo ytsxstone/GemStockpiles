@@ -1,10 +1,10 @@
-using Abp.AspNetCore.Mvc.Controllers;
-using Abp.IdentityFramework;
 using Microsoft.AspNetCore.Identity;
+using Abp.IdentityFramework;
+using Abp.AspNetCore.Mvc.Controllers;
 
 namespace JFJT.GemStockpiles.Controllers
 {
-    public abstract class GemStockpilesControllerBase: AbpController
+    public abstract class GemStockpilesControllerBase : AbpController
     {
         protected GemStockpilesControllerBase()
         {

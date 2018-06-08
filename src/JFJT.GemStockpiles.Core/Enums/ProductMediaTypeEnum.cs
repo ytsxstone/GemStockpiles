@@ -3,9 +3,9 @@
 namespace JFJT.GemStockpiles.Enums
 {
     /// <summary>
-    /// 产品媒体类型
+    /// 媒体类型
     /// </summary>
-    public enum ProductMediaTypeEnum
+    public enum MediaTypeEnum
     {
         /// <summary>
         /// 图片

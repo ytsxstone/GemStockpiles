@@ -1101,6 +1101,30 @@ namespace JFJT.GemStockpiles.Migrations
                     b.ToTable("CustomerCompanyLicense");
                 });
 
+            modelBuilder.Entity("JFJT.GemStockpiles.Models.Points.PointLog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ActionDesc");
+
+                    b.Property<DateTime>("ActionTime");
+
+                    b.Property<int>("ActionType");
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<int>("MemberId");
+
+                    b.Property<int>("Points");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PointLog");
+                });
+
             modelBuilder.Entity("JFJT.GemStockpiles.Models.Points.PointRank", b =>
                 {
                     b.Property<Guid>("Id")

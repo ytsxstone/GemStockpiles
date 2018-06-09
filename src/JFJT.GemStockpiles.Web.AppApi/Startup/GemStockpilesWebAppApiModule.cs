@@ -23,14 +23,16 @@ namespace JFJT.GemStockpiles.Web.Host.Startup
             _env = env;
         }
 
+        public override void PreInitialize()
+        {
+            Configuration.Modules.AbpAspNetCore()
+                .CreateControllersForAppServices(typeof(GemStockpilesApplicationModule).Assembly,
+                moduleName: "app", useConventionalHttpVerbs: true);
+        }
+
         public override void Initialize()
         {
             IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
-
-            Configuration.Modules.AbpAspNetCore()
-                 .CreateControllersForAppServices(
-                     typeof(GemStockpilesApplicationModule).GetAssembly()
-            );
         }
     }
 }

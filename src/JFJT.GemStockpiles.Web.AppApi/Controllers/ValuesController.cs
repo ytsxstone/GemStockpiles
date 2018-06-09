@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
+using Abp.AspNetCore.Mvc.Controllers;
 using JFJT.GemStockpiles.Commons.Dto;
 using JFJT.GemStockpiles.Users;
 using JFJT.GemStockpiles.Users.Dto;
@@ -11,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace JFJT.GemStockpiles.Web.AppApi.Controllers
 {
     [Route("api/[controller]")]
-    public class ValuesController : Controller
+    public class ValuesController : AbpController
     {
         private readonly IUserAppService _userAppService;
         public ValuesController(IUserAppService userAppService)

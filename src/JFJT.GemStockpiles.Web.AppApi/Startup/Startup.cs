@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp.AspNetCore;
+using Abp.Castle.Logging.Log4Net;
 using Abp.Extensions;
+using Castle.Facilities.Logging;
 using JFJT.GemStockpiles.Identity;
+using JFJT.GemStockpiles.Web.Host.Startup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Cors.Internal;
@@ -18,20 +22,22 @@ namespace JFJT.GemStockpiles.Web.AppApi.Startup
     {
         private const string _defaultCorsPolicyName = "localhost";
 
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             // MVC
             services.AddMvc(
                 options => options.Filters.Add(new CorsAuthorizationFilterFactory(_defaultCorsPolicyName))
             );
+
+            IdentityRegistrar.Register(services);
 
             // Configure CORS for angular2 UI
             services.AddCors(
@@ -50,21 +56,24 @@ namespace JFJT.GemStockpiles.Web.AppApi.Startup
                 )
             );
 
+            // Configure Abp and Dependency Injection
+            return services.AddAbp<GemStockpilesWebAppApiModule>(
+                // Configure Log4Net logging
+                options => options.IocManager.IocContainer.AddFacility<LoggingFacility>(
+                    f => f.UseAbpLog4Net().WithConfig("log4net.config")
+                )
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            //app.UseAbp(options => { options.UseAbpRequestLocalization = false; }); // Initializes ABP framework.
 
             app.UseCors(_defaultCorsPolicyName); // Enable CORS!
 
             app.UseStaticFiles();
 
-            app.UseAuthentication();
 
             app.UseMvc();
         }

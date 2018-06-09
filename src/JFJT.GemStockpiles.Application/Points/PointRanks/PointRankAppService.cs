@@ -14,7 +14,7 @@ using JFJT.GemStockpiles.Helpers;
 using JFJT.GemStockpiles.Sessions.Dto;
 using JFJT.GemStockpiles.Authorization;
 using JFJT.GemStockpiles.Models.Points;
-using JFJT.GemStockpiles.Models.Config;
+using JFJT.GemStockpiles.Models.Configs;
 using JFJT.GemStockpiles.Points.PointRanks.Dto;
 
 namespace JFJT.GemStockpiles.Points.PointRanks

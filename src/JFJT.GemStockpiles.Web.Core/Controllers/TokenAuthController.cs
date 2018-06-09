@@ -18,7 +18,7 @@ using JFJT.GemStockpiles.Authorization;
 using JFJT.GemStockpiles.Authorization.Users;
 using JFJT.GemStockpiles.Models.TokenAuth;
 using JFJT.GemStockpiles.MultiTenancy;
-using JFJT.GemStockpiles.Models.Config;
+using JFJT.GemStockpiles.Models.Configs;
 using JFJT.GemStockpiles.Helpers;
 
 namespace JFJT.GemStockpiles.Controllers

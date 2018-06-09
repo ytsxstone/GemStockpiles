@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using JFJT.GemStockpiles.Models.Config;
+using JFJT.GemStockpiles.Models.Configs;
 
 namespace JFJT.GemStockpiles.Helpers
 {

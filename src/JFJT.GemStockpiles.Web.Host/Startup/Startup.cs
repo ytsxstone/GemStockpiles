@@ -15,7 +15,7 @@ using Abp.Extensions;
 using JFJT.GemStockpiles.Authentication.JwtBearer;
 using JFJT.GemStockpiles.Configuration;
 using JFJT.GemStockpiles.Identity;
-using JFJT.GemStockpiles.Models.Config;
+using JFJT.GemStockpiles.Models.Configs;
 
 #if FEATURE_SIGNALR
 using Microsoft.AspNet.SignalR;

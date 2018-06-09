@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace JFJT.GemStockpiles.Models.Config
+namespace JFJT.GemStockpiles.Models.Configs
 {
     public class AppSettings
     {

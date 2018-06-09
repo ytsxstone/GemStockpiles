@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace JFJT.GemStockpiles.Models.Config
+namespace JFJT.GemStockpiles.Models.Configs
 {
     /// <summary>
     /// 文件上传配置

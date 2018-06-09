@@ -8,7 +8,7 @@ using Abp.Authorization;
 using JFJT.GemStockpiles.Helpers;
 using JFJT.GemStockpiles.Users.Dto;
 using JFJT.GemStockpiles.Commons.Dto;
-using JFJT.GemStockpiles.Models.Config;
+using JFJT.GemStockpiles.Models.Configs;
 using JFJT.GemStockpiles.Authorization.Users;
 
 namespace JFJT.GemStockpiles.Commons

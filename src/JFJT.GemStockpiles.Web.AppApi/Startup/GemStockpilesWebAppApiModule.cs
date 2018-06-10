@@ -2,37 +2,26 @@
 using Microsoft.Extensions.Configuration;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
-using System.Globalization;
-using Abp.AspNetCore.Configuration;
-using Abp.AspNetCore;
-using System.Reflection;
-using Abp.Application.Services;
+using JFJT.GemStockpiles.Configuration;
 
-namespace JFJT.GemStockpiles.Web.Host.Startup
+namespace JFJT.GemStockpiles.Web.AppApi.Startup
 {
     [DependsOn(
-        typeof(GemStockpilesApplicationModule),
-        typeof(AbpAspNetCoreModule)
-        )]
+       typeof(GemStockpilesWebCoreModule))]
     public class GemStockpilesWebAppApiModule: AbpModule
     {
         private readonly IHostingEnvironment _env;
+        private readonly IConfigurationRoot _appConfiguration;
 
         public GemStockpilesWebAppApiModule(IHostingEnvironment env)
         {
             _env = env;
-        }
-
-        public override void PreInitialize()
-        {
-            Configuration.Modules.AbpAspNetCore()
-                .CreateControllersForAppServices(typeof(GemStockpilesApplicationModule).Assembly,
-                moduleName: "app", useConventionalHttpVerbs: true);
+            _appConfiguration = env.GetAppConfiguration();
         }
 
         public override void Initialize()
         {
-            IocManager.RegisterAssemblyByConvention(Assembly.GetExecutingAssembly());
+            IocManager.RegisterAssemblyByConvention(typeof(GemStockpilesWebAppApiModule).GetAssembly());
         }
     }
 }

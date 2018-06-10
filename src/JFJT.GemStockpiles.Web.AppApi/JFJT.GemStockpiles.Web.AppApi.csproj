@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JFJT.GemStockpiles.Application\JFJT.GemStockpiles.Application.csproj" />
+    <ProjectReference Include="..\JFJT.GemStockpiles.Web.Core\JFJT.GemStockpiles.Web.Core.csproj" />
   </ItemGroup>
 
 </Project>

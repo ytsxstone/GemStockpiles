@@ -6,8 +6,9 @@ using Abp.AspNetCore;
 using Abp.Castle.Logging.Log4Net;
 using Abp.Extensions;
 using Castle.Facilities.Logging;
+using JFJT.GemStockpiles.Configuration;
 using JFJT.GemStockpiles.Identity;
-using JFJT.GemStockpiles.Web.Host.Startup;
+using JFJT.GemStockpiles.Models.Configs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Cors.Internal;
@@ -22,14 +23,13 @@ namespace JFJT.GemStockpiles.Web.AppApi.Startup
     {
         private const string _defaultCorsPolicyName = "localhost";
 
-        public IConfiguration Configuration { get; }
+        private readonly IConfigurationRoot _appConfiguration;
 
-        public Startup(IConfiguration configuration)
+        public Startup(IHostingEnvironment env)
         {
-            Configuration = configuration;
+            _appConfiguration = env.GetAppConfiguration();
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             // MVC
@@ -37,7 +37,10 @@ namespace JFJT.GemStockpiles.Web.AppApi.Startup
                 options => options.Filters.Add(new CorsAuthorizationFilterFactory(_defaultCorsPolicyName))
             );
 
+            services.Configure<AppSettings>(_appConfiguration.GetSection("AppSettings"));
+
             IdentityRegistrar.Register(services);
+            AuthConfigurer.Configure(services, _appConfiguration);
 
             // Configure CORS for angular2 UI
             services.AddCors(
@@ -46,7 +49,7 @@ namespace JFJT.GemStockpiles.Web.AppApi.Startup
                     builder => builder
                         .WithOrigins(
                             // App:CorsOrigins in appsettings.json can contain more than one address separated by comma.
-                            Configuration["App:CorsOrigins"]
+                            _appConfiguration["App:CorsOrigins"]
                                 .Split(",", StringSplitOptions.RemoveEmptyEntries)
                                 .Select(o => o.RemovePostFix("/"))
                                 .ToArray()
@@ -68,12 +71,15 @@ namespace JFJT.GemStockpiles.Web.AppApi.Startup
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            //app.UseAbp(options => { options.UseAbpRequestLocalization = false; }); // Initializes ABP framework.
+            app.UseAbp(options => { options.UseAbpRequestLocalization = false; }); // Initializes ABP framework.
 
             app.UseCors(_defaultCorsPolicyName); // Enable CORS!
 
             app.UseStaticFiles();
 
+            app.UseAuthentication();
+
+            app.UseAbpRequestLocalization();
 
             app.UseMvc();
         }

@@ -4,9 +4,9 @@ using JFJT.GemStockpiles.Entities;
 namespace JFJT.GemStockpiles.Models.Orders
 {
     /// <summary>
-    /// 订单信息
+    /// 申诉订单
     /// </summary>
-    public class Order : FullAudited<Guid>
+    public class OrderAppeal : FullAudited<Guid>
     {
 
     }

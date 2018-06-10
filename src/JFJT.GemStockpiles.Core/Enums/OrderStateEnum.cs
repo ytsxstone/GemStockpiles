@@ -8,36 +8,32 @@ namespace JFJT.GemStockpiles.Enums
     public enum OrderStateEnum
     {
         /// <summary>
-        /// 等待付款
+        /// 待付款
         /// </summary>
         Paying = 10,
         /// <summary>
-        /// 已付款
+        /// 待确认
         /// </summary>
-        Payed = 20,
+        Confirming = 20,
         /// <summary>
-        /// 已发货
+        /// 待发货
         /// </summary>
-        Sended = 30,
+        Payed = 30,
         /// <summary>
-        /// 已收货
+        /// 待收货
         /// </summary>
-        Received = 40,
+        Sended = 40,
+        /// <summary>
+        /// 待评价
+        /// </summary>
+        Received = 50,
         /// <summary>
         /// 已完成 
         /// </summary>
-        Completed = 50,
+        Completed = 60,
         /// <summary>
-        /// 退款中
+        /// 已关闭
         /// </summary>
-        Refunding = 60,
-        /// <summary>
-        /// 已退款 
-        /// </summary>
-        Refunded = 70,
-        /// <summary>
-        /// 已取消
-        /// </summary>
-        Cancelled = 80
+        Cancelled = 70
     }
 }

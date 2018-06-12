@@ -16,9 +16,19 @@ namespace JFJT.GemStockpiles.Products.CategoryAttributes.Dto
         public string CategoryName { get; set; }
 
         /// <summary>
+        /// 类型名称层级路径
+        /// </summary>
+        public string CategoryNamePath { get; set; }
+
+        /// <summary>
         /// 类型ID
         /// </summary>
         public Guid CategoryId { get; set; }
+
+        /// <summary>
+        /// 类型ID层级路径
+        /// </summary>
+        public string CategoryIdPath { get; set; }
 
         /// <summary>       
         /// 属性名称

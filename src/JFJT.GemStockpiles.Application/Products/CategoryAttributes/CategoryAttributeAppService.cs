@@ -38,7 +38,8 @@ namespace JFJT.GemStockpiles.Products.CategoryAttributes
 
             var entity = _categoryAttributRepository.GetAllList();
 
-            if (entity != null && entity.Count > 0) {
+            if (entity != null && entity.Count > 0)
+            {
                 foreach (var item in entity)
                 {
                     var model = new CategoryCascaderDto() { label = item.Name, value = item.Id };
@@ -74,7 +75,7 @@ namespace JFJT.GemStockpiles.Products.CategoryAttributes
         {
             CheckCreatePermission();
 
-            CheckErrors(await CheckParAsync(input.Id, input.Name,input.Sort));
+            CheckErrors(await CheckParAsync(input.Id, input.Name, input.Sort));
 
             var entity = ObjectMapper.Map<CategoryAttribute>(input);
 
@@ -96,16 +97,45 @@ namespace JFJT.GemStockpiles.Products.CategoryAttributes
         {
             PagedResultDto<CategoryAttributeDto> query = await base.GetAll(input);
 
+            var categoryData = _categoryRepository.GetAll().ToList();
+
             //分类名称处理
             if (query.TotalCount > 0)
             {
                 query.Items.ToList().ForEach(x =>
                 {
-                    x.CategoryName = _categoryRepository.FirstOrDefault(x.CategoryId).Name;
+                    var model = DealCategoryInfo(categoryData, new CategoryAttributeDto() { CategoryId = x.CategoryId });
+                    x.CategoryName = categoryData.Find(t => t.Id == x.CategoryId)?.Name;
+                    x.CategoryNamePath = model.CategoryNamePath.TrimEnd('/');
+                    x.CategoryIdPath = model.CategoryIdPath.TrimEnd('/');
                 });
             }
 
             return query;
+        }
+
+        /// <summary>
+        /// 计算属性分类信息
+        /// </summary>
+        /// <param name="categoryData"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        protected CategoryAttributeDto DealCategoryInfo(List<Category> categoryData, CategoryAttributeDto model)
+        {
+            var category = categoryData.Find(t => t.Id == model.CategoryId);
+            if (category != null)
+            {
+                if (category.ParentId != null)
+                {
+                    model.CategoryId = (Guid)category.ParentId;
+                    DealCategoryInfo(categoryData, model);
+                }
+
+                model.CategoryIdPath += category.Id.ToString() + "/";
+                model.CategoryNamePath += category.Name + "/";
+            }
+
+            return model;
         }
 
         protected override IQueryable<CategoryAttribute> CreateFilteredQuery(PagedResultRequestExtendDto input)

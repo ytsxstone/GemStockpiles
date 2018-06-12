@@ -6,7 +6,7 @@ namespace JFJT.GemStockpiles.Models.Products
     /// <summary>
     /// 产品分类表
     /// </summary>
-    public class Categorys : FullAudited<Guid>
+    public class Category : FullAudited<Guid>
     {
         /// <summary>
         /// 分类名称

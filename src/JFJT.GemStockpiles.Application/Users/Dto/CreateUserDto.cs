@@ -3,6 +3,7 @@ using Abp.Auditing;
 using Abp.AutoMapper;
 using Abp.Runtime.Validation;
 using Abp.Authorization.Users;
+using JFJT.GemStockpiles.Enums;
 using JFJT.GemStockpiles.Authorization.Users;
 
 namespace JFJT.GemStockpiles.Users.Dto
@@ -33,6 +34,9 @@ namespace JFJT.GemStockpiles.Users.Dto
         [StringLength(AbpUserBase.MaxPlainPasswordLength)]
         [DisableAuditing]
         public string Password { get; set; }
+
+        [Required]
+        public virtual UserTypeEnum UserType { get; set; } = UserTypeEnum.Administrator;
 
         public void Normalize()
         {

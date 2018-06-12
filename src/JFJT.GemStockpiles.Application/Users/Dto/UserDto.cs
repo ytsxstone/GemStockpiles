@@ -4,6 +4,7 @@ using Abp.Auditing;
 using Abp.AutoMapper;
 using Abp.Authorization.Users;
 using Abp.Application.Services.Dto;
+using JFJT.GemStockpiles.Enums;
 using JFJT.GemStockpiles.Authorization.Users;
 
 namespace JFJT.GemStockpiles.Users.Dto
@@ -38,5 +39,8 @@ namespace JFJT.GemStockpiles.Users.Dto
         public DateTime CreationTime { get; set; }
 
         public string[] RoleNames { get; set; }
+
+        [Required]
+        public virtual UserTypeEnum UserType { get; set; } = UserTypeEnum.Administrator;
     }
 }

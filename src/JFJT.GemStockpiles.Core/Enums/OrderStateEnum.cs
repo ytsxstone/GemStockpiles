@@ -18,15 +18,15 @@ namespace JFJT.GemStockpiles.Enums
         /// <summary>
         /// 待发货
         /// </summary>
-        Payed = 30,
+        Sending = 30,
         /// <summary>
         /// 待收货
         /// </summary>
-        Sended = 40,
+        Receiving = 40,
         /// <summary>
         /// 待评价
         /// </summary>
-        Received = 50,
+        Appraising = 50,
         /// <summary>
         /// 已完成 
         /// </summary>
@@ -34,6 +34,6 @@ namespace JFJT.GemStockpiles.Enums
         /// <summary>
         /// 已关闭
         /// </summary>
-        Cancelled = 70
+        Closed = 70
     }
 }

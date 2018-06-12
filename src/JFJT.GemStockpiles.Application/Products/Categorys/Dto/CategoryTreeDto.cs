@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace JFJT.GemStockpiles.Products.Category.Dto
+namespace JFJT.GemStockpiles.Products.Categorys.Dto
 {
     public class CategoryTreeDto
     {
-        public string title { get; set; }
+        public Guid value { get; set; }
 
-        //public string name { get; set; }
+        public string title { get; set; }
 
         public int level { get; set; }
 

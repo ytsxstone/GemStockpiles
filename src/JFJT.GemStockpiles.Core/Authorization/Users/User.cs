@@ -1,7 +1,8 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using Abp.Authorization.Users;
 using Abp.Extensions;
+using Abp.Authorization.Users;
+using JFJT.GemStockpiles.Enums;
 
 namespace JFJT.GemStockpiles.Authorization.Users
 {
@@ -19,6 +20,12 @@ namespace JFJT.GemStockpiles.Authorization.Users
 
         [Required(AllowEmptyStrings = true)]
         public override string EmailAddress { get; set; }
+
+        /// <summary>
+        /// 用户类型
+        /// </summary>
+        [Required]
+        public virtual UserTypeEnum UserType { get; set; } = UserTypeEnum.Administrator;
 
         public static User CreateTenantAdminUser(int tenantId, string emailAddress)
         {

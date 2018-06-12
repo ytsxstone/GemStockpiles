@@ -1,35 +1,43 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
+using Abp.UI;
+using Abp.Extensions;
+using Abp.Linq.Extensions;
+using Abp.IdentityFramework;
 using Abp.Domain.Repositories;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
-using Abp.IdentityFramework;
-using Abp.UI;
 using JFJT.GemStockpiles.Enums;
 using JFJT.GemStockpiles.Helpers;
 using JFJT.GemStockpiles.Commons.Dto;
 using JFJT.GemStockpiles.Models.Products;
+using JFJT.GemStockpiles.Products.Categorys.Dto;
 using JFJT.GemStockpiles.Products.CategoryAttributes.Dto;
-using Microsoft.AspNetCore.Identity;
-using JFJT.GemStockpiles.Products.Category.Dto;
 
 namespace JFJT.GemStockpiles.Products.CategoryAttributes
 {
-    public class CategoryAttributeAppService : AsyncCrudAppService<CategoryAttribute, CategoryAttributeDto, Guid, PagedResultRequestDto, CategoryAttributeDto, CategoryAttributeDto>, ICategoryAttributeAppService
+    public class CategoryAttributeAppService : AsyncCrudAppService<CategoryAttribute, CategoryAttributeDto, Guid, PagedResultRequestExtendDto, CategoryAttributeDto, CategoryAttributeDto>, ICategoryAttributeAppService
     {
         private readonly IRepository<CategoryAttribute, Guid> _categoryAttributRepository;
+        private readonly IRepository<Category, Guid> _categoryRepository;
 
-        public CategoryAttributeAppService(IRepository<CategoryAttribute, Guid> categoryAttributRepository)
+        public CategoryAttributeAppService(IRepository<CategoryAttribute, Guid> categoryAttributRepository,
+            IRepository<Category, Guid> categoryRepository)
          : base(categoryAttributRepository)
         {
             _categoryAttributRepository = categoryAttributRepository;
+            _categoryRepository = categoryRepository;
         }
 
         public Task<ListResultDto<CategoryCascaderDto>> GetAllAttr()
         {
             List<CategoryCascaderDto> listData = new List<CategoryCascaderDto>();
+
             var entity = _categoryAttributRepository.GetAllList();
+
             if (entity != null && entity.Count > 0) {
                 foreach (var item in entity)
                 {
@@ -37,6 +45,7 @@ namespace JFJT.GemStockpiles.Products.CategoryAttributes
                     listData.Add(model);
                 }
             }
+
             return Task.FromResult(new ListResultDto<CategoryCascaderDto>(
                 ObjectMapper.Map<List<CategoryCascaderDto>>(listData)
             ));
@@ -72,6 +81,41 @@ namespace JFJT.GemStockpiles.Products.CategoryAttributes
             entity = await _categoryAttributRepository.InsertAsync(entity);
 
             return MapToEntityDto(entity);
+        }
+
+        public Task<ListResultDto<CategoryAttributeDto>> GetAttr(Guid Id)
+        {
+            var entity = _categoryAttributRepository.GetAllList().Where(a => a.CategoryId == Id);
+
+            return Task.FromResult(new ListResultDto<CategoryAttributeDto>(
+                ObjectMapper.Map<List<CategoryAttributeDto>>(entity)
+            ));
+        }
+
+        public override async Task<PagedResultDto<CategoryAttributeDto>> GetAll(PagedResultRequestExtendDto input)
+        {
+            PagedResultDto<CategoryAttributeDto> query = await base.GetAll(input);
+
+            //分类名称处理
+            if (query.TotalCount > 0)
+            {
+                query.Items.ToList().ForEach(x =>
+                {
+                    x.CategoryName = _categoryRepository.FirstOrDefault(x.CategoryId).Name;
+                });
+            }
+
+            return query;
+        }
+
+        protected override IQueryable<CategoryAttribute> CreateFilteredQuery(PagedResultRequestExtendDto input)
+        {
+            return Repository.GetAll().WhereIf(!input.KeyWord.IsNullOrWhiteSpace(), x => x.CategoryId.Equals(Guid.Parse(input.KeyWord)));
+        }
+
+        protected override IQueryable<CategoryAttribute> ApplySorting(IQueryable<CategoryAttribute> query, PagedResultRequestExtendDto input)
+        {
+            return query.OrderBy(r => r.CategoryId).ThenBy(r => r.Name);
         }
 
         protected async Task<IdentityResult> CheckParAsync(Guid? expectedId, string name, int sort)

@@ -32,7 +32,7 @@ namespace JFJT.GemStockpiles.Products.CategoryAttributeDetails
 
             return MapToEntityDto(entity);
         }
-        public Task<ListResultDto<CategoryAttrDetailDto>> GetAttr(Guid Id)
+        public Task<ListResultDto<CategoryAttrDetailDto>> GetAttrDetail(Guid Id)
         {
             var entity = _categoryAttrDetailRepository.GetAllList().Where(a=>a.AttributeId==Id);
             return Task.FromResult(new ListResultDto<CategoryAttrDetailDto>(

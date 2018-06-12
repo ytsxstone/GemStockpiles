@@ -1,25 +1,24 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Abp.Application.Services;
-using Abp.Application.Services.Dto;
+using Abp.UI;
 using Abp.Authorization;
 using Abp.Domain.Repositories;
+using Abp.Application.Services;
+using Abp.Application.Services.Dto;
 using JFJT.GemStockpiles.Authorization;
 using JFJT.GemStockpiles.Models.Products;
-using JFJT.GemStockpiles.Products.Category.Dto;
-using System.Linq;
-using Abp.UI;
-using Abp.Domain.Entities;
+using JFJT.GemStockpiles.Products.Categorys.Dto;
 
-namespace JFJT.GemStockpiles.Products.Category
+namespace JFJT.GemStockpiles.Products.Categorys
 {
     [AbpAuthorize(PermissionNames.Pages_ProductManagement_Categorys)]
-    public class CategoryAppService : AsyncCrudAppService<Categorys, CategoryDto, Guid, PagedResultRequestDto, CategoryDto, CategoryDto>, ICategoryAppService
+    public class CategoryAppService : AsyncCrudAppService<Category, CategoryDto, Guid, PagedResultRequestDto, CategoryDto, CategoryDto>, ICategoryAppService
     {
-        private readonly IRepository<Categorys, Guid> _categoryRepository;
+        private readonly IRepository<Category, Guid> _categoryRepository;
 
-        public CategoryAppService(IRepository<Categorys, Guid> categoryRepository)
+        public CategoryAppService(IRepository<Category, Guid> categoryRepository)
          : base(categoryRepository)
         {
             _categoryRepository = categoryRepository;
@@ -36,20 +35,16 @@ namespace JFJT.GemStockpiles.Products.Category
             if (_categoryRepository.GetAll().FirstOrDefault(b => b.Sort == input.Sort && b.ParentId == input.ParentId) != null)
                 throw new UserFriendlyException(input.Sort + " 当前排序已存在");
 
-            var entity = ObjectMapper.Map<Categorys>(input);
+            var entity = ObjectMapper.Map<Category>(input);
 
             if (input.ParentId != null) {
 
-
-
             }
-
-
+            
             entity = await _categoryRepository.InsertAsync(entity);
 
             return MapToEntityDto(entity);
         }
-
 
         [AbpAuthorize(PermissionNames.Pages_ProductManagement_Categorys_View)]
         public Task<ListResultDto<CategoryDto>> GetParent()
@@ -66,7 +61,7 @@ namespace JFJT.GemStockpiles.Products.Category
             List<CategoryTreeDto> treeList = new List<CategoryTreeDto>();
 
             var Category = _categoryRepository.GetAllList();
-            var treeData = new ListResultDto<Categorys>(ObjectMapper.Map<List<Categorys>>(Category));
+            var treeData = new ListResultDto<Category>(ObjectMapper.Map<List<Category>>(Category));
 
             if (treeData != null)
             {
@@ -83,7 +78,7 @@ namespace JFJT.GemStockpiles.Products.Category
         /// <param name="parentId"></param>
         /// <param name="parentLevel"></param>
         /// <returns></returns>
-        private List<CategoryTreeDto> GetTreePermissionList(ListResultDto<Categorys> categoryData, Guid? parentId, int parentLevel)
+        private List<CategoryTreeDto> GetTreePermissionList(ListResultDto<Category> categoryData, Guid? parentId, int parentLevel)
         {
             List<CategoryTreeDto> treeList = new List<CategoryTreeDto>();
 
@@ -93,7 +88,7 @@ namespace JFJT.GemStockpiles.Products.Category
             foreach (var item in treeData)
             {
                 var children = GetTreePermissionList(categoryData, item.Id, level);
-                var model = new CategoryTreeDto() { title = item.Name, level = level };
+                var model = new CategoryTreeDto() { title = item.Name, level = level,value=item.Id };
                 model.children = children.Count <= 0 ? null : children;
                 model.expand = level <= 2 ? true : false;
 
@@ -109,7 +104,7 @@ namespace JFJT.GemStockpiles.Products.Category
             List<CategoryCascaderDto> treeList = new List<CategoryCascaderDto>();
 
             var Category = _categoryRepository.GetAllList();
-            var treeData = new ListResultDto<Categorys>(ObjectMapper.Map<List<Categorys>>(Category));
+            var treeData = new ListResultDto<Category>(ObjectMapper.Map<List<Category>>(Category));
 
             if (treeData != null)
             {
@@ -126,7 +121,7 @@ namespace JFJT.GemStockpiles.Products.Category
         /// <param name="parentId"></param>
         /// <param name="parentLevel"></param>
         /// <returns></returns>
-        private List<CategoryCascaderDto> GetCascaderPermissionList(ListResultDto<Categorys> categoryData, Guid? parentId, int parentLevel)
+        private List<CategoryCascaderDto> GetCascaderPermissionList(ListResultDto<Category> categoryData, Guid? parentId, int parentLevel)
         {
             List<CategoryCascaderDto> treeList = new List<CategoryCascaderDto>();
 

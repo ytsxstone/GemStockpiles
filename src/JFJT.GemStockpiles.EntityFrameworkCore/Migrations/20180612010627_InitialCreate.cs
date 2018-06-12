@@ -350,7 +350,8 @@ namespace JFJT.GemStockpiles.Migrations
                     SecurityStamp = table.Column<string>(maxLength: 128, nullable: true),
                     Surname = table.Column<string>(maxLength: 32, nullable: true),
                     TenantId = table.Column<int>(nullable: true),
-                    UserName = table.Column<string>(maxLength: 32, nullable: false)
+                    UserName = table.Column<string>(maxLength: 32, nullable: false),
+                    UserType = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

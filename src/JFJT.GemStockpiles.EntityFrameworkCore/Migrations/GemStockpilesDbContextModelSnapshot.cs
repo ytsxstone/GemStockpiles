@@ -974,6 +974,8 @@ namespace JFJT.GemStockpiles.Migrations
                         .IsRequired()
                         .HasMaxLength(32);
 
+                    b.Property<int>("UserType");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CreatorUserId");

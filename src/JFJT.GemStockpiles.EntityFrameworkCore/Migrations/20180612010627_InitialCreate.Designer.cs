@@ -17,7 +17,7 @@ using System;
 namespace JFJT.GemStockpiles.Migrations
 {
     [DbContext(typeof(GemStockpilesDbContext))]
-    [Migration("20180608092714_InitialCreate")]
+    [Migration("20180612010627_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -974,6 +974,8 @@ namespace JFJT.GemStockpiles.Migrations
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(32);
+
+                    b.Property<int>("UserType");
 
                     b.HasKey("Id");
 

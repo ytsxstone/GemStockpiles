@@ -11,6 +11,11 @@ namespace JFJT.GemStockpiles.Products.CategoryAttributes.Dto
     public class CategoryAttributeDto : EntityDto<Guid>
     {
         /// <summary>
+        /// 类型名称
+        /// </summary>
+        public string CategoryName { get; set; }
+
+        /// <summary>
         /// 类型ID
         /// </summary>
         public Guid CategoryId { get; set; }

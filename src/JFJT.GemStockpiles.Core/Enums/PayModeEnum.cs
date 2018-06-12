@@ -12,16 +12,16 @@ namespace JFJT.GemStockpiles.Enums
         /// </summary>
         OfflinePay = 10,
         /// <summary>
+        /// 银联转账
+        /// </summary>
+        UnionPay = 20,
+        /// <summary>
         /// 支付宝
         /// </summary>
-        Alipay = 20,
+        Alipay = 30,
         /// <summary>
         /// 微信
         /// </summary>
-        WeChat = 30,
-        /// <summary>
-        /// 银联转账
-        /// </summary>
-        UnionPay = 40
+        WeChat = 40
     }
 }

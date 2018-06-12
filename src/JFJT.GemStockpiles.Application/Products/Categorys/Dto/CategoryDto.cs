@@ -4,9 +4,9 @@ using Abp.AutoMapper;
 using Abp.Application.Services.Dto;
 using JFJT.GemStockpiles.Models.Products;
 
-namespace JFJT.GemStockpiles.Products.Category.Dto
+namespace JFJT.GemStockpiles.Products.Categorys.Dto
 {
-    [AutoMap(typeof(Categorys))]
+    [AutoMap(typeof(Category))]
     public class CategoryDto : EntityDto<Guid>
     {
         /// <summary>
@@ -28,8 +28,5 @@ namespace JFJT.GemStockpiles.Products.Category.Dto
         /// 排序
         /// </summary>
         public int Sort { get; set; }
-
-
-        //public List<CategoryDto> Childs { get; set; } = new List<CategoryDto>();
     }
 }

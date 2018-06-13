@@ -34,6 +34,11 @@ namespace JFJT.GemStockpiles.Points.PointRanks
             uploadHelper = new UploadHelper(appSettings);
         }
 
+        /// <summary>
+        /// 新增积分等级
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [AbpAuthorize(PermissionNames.Pages_PointManagement_PointRanks_Create)]
         public override async Task<PointRankDto> Create(PointRankDto input)
         {
@@ -54,6 +59,11 @@ namespace JFJT.GemStockpiles.Points.PointRanks
             return MapToEntityDto(entity);
         }
 
+        /// <summary>
+        /// 修改积分等级
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [AbpAuthorize(PermissionNames.Pages_PointManagement_PointRanks_Edit)]
         public override async Task<PointRankDto> Update(PointRankDto input)
         {
@@ -71,7 +81,7 @@ namespace JFJT.GemStockpiles.Points.PointRanks
 
             entity = await _pointRankRepository.UpdateAsync(entity);
 
-            // 头像文件处理
+            //头像文件处理
             if (oldAvatar != entity.Avatar)
             {
                 uploadHelper.MoveFile(entity.Avatar, UploadType.PointAvatar, FileType.Image, AbpSession.UserId);
@@ -82,6 +92,11 @@ namespace JFJT.GemStockpiles.Points.PointRanks
             return MapToEntityDto(entity);
         }
 
+        /// <summary>
+        /// 删除积分等级
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [AbpAuthorize(PermissionNames.Pages_PointManagement_PointRanks_Delete)]
         public override async Task Delete(EntityDto<Guid> input)
         {
@@ -93,18 +108,28 @@ namespace JFJT.GemStockpiles.Points.PointRanks
 
             await _pointRankRepository.DeleteAsync(entity);
 
-            //删除
+            //删除头像文件
             if (!string.IsNullOrWhiteSpace(entity.Avatar))
             {
                 uploadHelper.DeleteFile(entity.Avatar, UploadType.PointAvatar, FileType.Image);
             }
         }
 
+        /// <summary>
+        /// Dto模型映射
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="pointRank"></param>
         protected override void MapToEntity(PointRankDto input, PointRank pointRank)
         {
             ObjectMapper.Map(input, pointRank);
         }
 
+        /// <summary>
+        /// 根据ID获取Entity模型
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         protected override async Task<PointRank> GetEntityByIdAsync(Guid id)
         {
             var entity = await Repository.FirstOrDefaultAsync(x => x.Id == id);
@@ -116,11 +141,24 @@ namespace JFJT.GemStockpiles.Points.PointRanks
             return entity;
         }
 
+        /// <summary>
+        /// GetAll查询排序条件
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="input"></param>
+        /// <returns></returns>
         protected override IQueryable<PointRank> ApplySorting(IQueryable<PointRank> query, PagedResultRequestDto input)
         {
             return query.OrderBy(r => r.MinPoint);
         }
 
+        /// <summary>
+        /// 检测积分等级名称或最小积分值是否已存在
+        /// </summary>
+        /// <param name="expectedId"></param>
+        /// <param name="name"></param>
+        /// <param name="minPoint"></param>
+        /// <returns></returns>
         protected async Task<IdentityResult> CheckNameOrMinPointAsync(Guid? expectedId, string name, int minPoint)
         {
             var entity = await _pointRankRepository.FirstOrDefaultAsync(b => b.Name == name);
@@ -138,6 +176,10 @@ namespace JFJT.GemStockpiles.Points.PointRanks
             return IdentityResult.Success;
         }
 
+        /// <summary>
+        /// 异常描述本地化转换函数
+        /// </summary>
+        /// <param name="identityResult"></param>
         protected virtual void CheckErrors(IdentityResult identityResult)
         {
             identityResult.CheckErrors(LocalizationManager);

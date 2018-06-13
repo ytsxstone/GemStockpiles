@@ -31,6 +31,11 @@ namespace JFJT.GemStockpiles.Roles
             _userManager = userManager;
         }
 
+        /// <summary>
+        /// 添加角色
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [AbpAuthorize(PermissionNames.Pages_SystemManagement_Roles_Create)]
         public override async Task<RoleDto> Create(CreateRoleDto input)
         {
@@ -51,6 +56,11 @@ namespace JFJT.GemStockpiles.Roles
             return MapToEntityDto(role);
         }
 
+        /// <summary>
+        /// 修改角色
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [AbpAuthorize(PermissionNames.Pages_SystemManagement_Roles_Edit)]
         public override async Task<RoleDto> Update(RoleDto input)
         {
@@ -72,6 +82,11 @@ namespace JFJT.GemStockpiles.Roles
             return MapToEntityDto(role);
         }
 
+        /// <summary>
+        /// 删除角色
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [AbpAuthorize(PermissionNames.Pages_SystemManagement_Roles_Delete)]
         public override async Task Delete(EntityDto<int> input)
         {
@@ -88,6 +103,11 @@ namespace JFJT.GemStockpiles.Roles
             CheckErrors(await _roleManager.DeleteAsync(role));
         }
 
+        /// <summary>
+        /// 根据ID获取编辑角色信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<RoleDto> GetRoleForEdit(int id)
         {
             var role = await _roleManager.GetRoleByIdAsync(id);
@@ -101,6 +121,10 @@ namespace JFJT.GemStockpiles.Roles
             return editRoleDto;
         }
 
+        /// <summary>
+        /// 获取权限列表数据
+        /// </summary>
+        /// <returns></returns>
         public Task<ListResultDto<PermissionDto>> GetAllPermissions()
         {
             var permissions = PermissionManager.GetAllPermissions();
@@ -110,6 +134,10 @@ namespace JFJT.GemStockpiles.Roles
             ));
         }
 
+        /// <summary>
+        /// 获取权限树形结构数据
+        /// </summary>
+        /// <returns></returns>
         public Task<ListResultDto<PermissionTreeDto>> GetTreePermissions()
         {
             List<PermissionTreeDto> treeList = new List<PermissionTreeDto>();
@@ -120,20 +148,20 @@ namespace JFJT.GemStockpiles.Roles
 
             if (treeData != null)
             {
-                treeList = GetTreePermissionList(treeData, null, 0);
+                treeList = GetPermissionTreeStruct(treeData, null, 0);
             }
 
             return Task.FromResult(new ListResultDto<PermissionTreeDto>(ObjectMapper.Map<List<PermissionTreeDto>>(treeList)));
         }
 
         /// <summary>
-        /// 递归生成权限Tree
+        /// 递归生成权限树形结构数据
         /// </summary>
         /// <param name="permissionData"></param>
         /// <param name="parentName"></param>
         /// <param name="parentLevel"></param>
         /// <returns></returns>
-        protected List<PermissionTreeDto> GetTreePermissionList(ListResultDto<FlatPermissionDto> permissionData, string parentName, int parentLevel)
+        protected List<PermissionTreeDto> GetPermissionTreeStruct(ListResultDto<FlatPermissionDto> permissionData, string parentName, int parentLevel)
         {
             List<PermissionTreeDto> treeList = new List<PermissionTreeDto>();
 
@@ -142,7 +170,7 @@ namespace JFJT.GemStockpiles.Roles
 
             foreach (var item in treeData)
             {
-                var children = GetTreePermissionList(permissionData, item.Name, level);
+                var children = GetPermissionTreeStruct(permissionData, item.Name, level);
 
                 var model = new PermissionTreeDto() { title = item.DisplayName, name = item.Name, level = level };
                 model.children = children.Count <= 0 ? null : children;
@@ -154,21 +182,41 @@ namespace JFJT.GemStockpiles.Roles
             return treeList;
         }
 
-        protected override IQueryable<Role> CreateFilteredQuery(PagedResultRequestExtendDto input)
-        {
-            return Repository.GetAllIncluding(x => x.Permissions).WhereIf(!input.KeyWord.IsNullOrWhiteSpace(), x => x.Name.Contains(input.KeyWord) || x.DisplayName.Contains(input.KeyWord));
-        }
-
+        /// <summary>
+        /// 根据ID获取Entity模型
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         protected override async Task<Role> GetEntityByIdAsync(int id)
         {
             return await Repository.GetAllIncluding(x => x.Permissions).FirstOrDefaultAsync(x => x.Id == id);
         }
 
+        /// <summary>
+        /// GetAll查询过滤条件
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        protected override IQueryable<Role> CreateFilteredQuery(PagedResultRequestExtendDto input)
+        {
+            return Repository.GetAllIncluding(x => x.Permissions).WhereIf(!input.KeyWord.IsNullOrWhiteSpace(), x => x.Name.Contains(input.KeyWord) || x.DisplayName.Contains(input.KeyWord));
+        }
+
+        /// <summary>
+        /// GetAll查询排序条件
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="input"></param>
+        /// <returns></returns>
         protected override IQueryable<Role> ApplySorting(IQueryable<Role> query, PagedResultRequestExtendDto input)
         {
             return query.OrderBy(r => r.DisplayName);
         }
 
+        /// <summary>
+        /// 异常描述本地化转换函数
+        /// </summary>
+        /// <param name="identityResult"></param>
         protected virtual void CheckErrors(IdentityResult identityResult)
         {
             identityResult.CheckErrors(LocalizationManager);

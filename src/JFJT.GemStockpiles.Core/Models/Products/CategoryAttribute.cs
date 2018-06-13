@@ -11,7 +11,7 @@ namespace JFJT.GemStockpiles.Models.Products
     public class CategoryAttribute : FullAudited<Guid>
     {
         /// <summary>
-        /// 类型ID
+        /// 分类ID
         /// </summary>
         public Guid CategoryId { get; set; }
 

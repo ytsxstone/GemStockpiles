@@ -49,41 +49,41 @@ namespace JFJT.GemStockpiles.Authorization
             #endregion
 
             #region 商品管理
-            var ProductManagement = pages.CreateChildPermission(PermissionNames.Pages_ProductManagement,L("ProductManagement"));
+            var ProductManagement = pages.CreateChildPermission(PermissionNames.Pages_ProductManagement, L("ProductManagement"));
 
-            var product = ProductManagement.CreateChildPermission(PermissionNames.Pages_ProductManagement_Products,L("ProductList"));
+            var product = ProductManagement.CreateChildPermission(PermissionNames.Pages_ProductManagement_Products, L("Products"));
             product.CreateChildPermission(PermissionNames.Pages_ProductManagement_Products_View, L("View"));
             product.CreateChildPermission(PermissionNames.Pages_ProductManagement_Products_Create, L("Create"));
             product.CreateChildPermission(PermissionNames.Pages_ProductManagement_Products_Edit, L("Edit"));
             product.CreateChildPermission(PermissionNames.Pages_ProductManagement_Products_Delete, L("Delete"));
-
-            var analysis = ProductManagement.CreateChildPermission(PermissionNames.Pages_ProductManagement_Analysis, L("ProductAnalysis"));
-            analysis.CreateChildPermission(PermissionNames.Pages_ProductManagement_Analysis_View, L("View"));
-            analysis.CreateChildPermission(PermissionNames.Pages_ProductManagement_Analysis_Create, L("Create"));
-            analysis.CreateChildPermission(PermissionNames.Pages_ProductManagement_Analysis_Edit, L("Edit"));
-            analysis.CreateChildPermission(PermissionNames.Pages_ProductManagement_Analysis_Delete, L("Delete"));
 
             var settings = ProductManagement.CreateChildPermission(PermissionNames.Pages_ProductManagement_Categorys, L("ProductCategorys"));
             settings.CreateChildPermission(PermissionNames.Pages_ProductManagement_Categorys_View, L("View"));
             settings.CreateChildPermission(PermissionNames.Pages_ProductManagement_Categorys_Create, L("Create"));
             settings.CreateChildPermission(PermissionNames.Pages_ProductManagement_Categorys_Edit, L("Edit"));
             settings.CreateChildPermission(PermissionNames.Pages_ProductManagement_Categorys_Delete, L("Delete"));
+
+            var analysis = ProductManagement.CreateChildPermission(PermissionNames.Pages_ProductManagement_CategoryAttributes, L("CategoryAttributes"));
+            analysis.CreateChildPermission(PermissionNames.Pages_ProductManagement_CategoryAttributes_View, L("View"));
+            analysis.CreateChildPermission(PermissionNames.Pages_ProductManagement_CategoryAttributes_Create, L("Create"));
+            analysis.CreateChildPermission(PermissionNames.Pages_ProductManagement_CategoryAttributes_Edit, L("Edit"));
+            analysis.CreateChildPermission(PermissionNames.Pages_ProductManagement_CategoryAttributes_Delete, L("Delete"));
             #endregion
 
             #region 订单管理
             var OrderManagement = pages.CreateChildPermission(PermissionNames.Pages_OrderManagement, L("OrderManagement"));
 
-            var comment = OrderManagement.CreateChildPermission(PermissionNames.Pages_OrderManagement_Comments, L("CommentsManagement"));
-            comment.CreateChildPermission(PermissionNames.Pages_OrderManagement_Comments_View, L("View"));
-            comment.CreateChildPermission(PermissionNames.Pages_OrderManagement_Comments_Create, L("Create"));
-            comment.CreateChildPermission(PermissionNames.Pages_OrderManagement_Comments_Edit, L("Edit"));
-            comment.CreateChildPermission(PermissionNames.Pages_OrderManagement_Comments_Delete, L("Delete"));
-
-            var orders = OrderManagement.CreateChildPermission(PermissionNames.Pages_OrderManagement_Orders, L("OrderList"));
+            var orders = OrderManagement.CreateChildPermission(PermissionNames.Pages_OrderManagement_Orders, L("Orders"));
             orders.CreateChildPermission(PermissionNames.Pages_OrderManagement_Orders_View, L("View"));
             orders.CreateChildPermission(PermissionNames.Pages_OrderManagement_Orders_Create, L("Create"));
             orders.CreateChildPermission(PermissionNames.Pages_OrderManagement_Orders_Edit, L("Edit"));
             orders.CreateChildPermission(PermissionNames.Pages_OrderManagement_Orders_Delete, L("Delete"));
+
+            var comment = OrderManagement.CreateChildPermission(PermissionNames.Pages_OrderManagement_Comments, L("OrderComments"));
+            comment.CreateChildPermission(PermissionNames.Pages_OrderManagement_Comments_View, L("View"));
+            comment.CreateChildPermission(PermissionNames.Pages_OrderManagement_Comments_Create, L("Create"));
+            comment.CreateChildPermission(PermissionNames.Pages_OrderManagement_Comments_Edit, L("Edit"));
+            comment.CreateChildPermission(PermissionNames.Pages_OrderManagement_Comments_Delete, L("Delete"));
             #endregion
         }
 

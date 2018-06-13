@@ -17,7 +17,7 @@ using System;
 namespace JFJT.GemStockpiles.Migrations
 {
     [DbContext(typeof(GemStockpilesDbContext))]
-    [Migration("20180612010627_InitialCreate")]
+    [Migration("20180613062354_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1188,6 +1188,38 @@ namespace JFJT.GemStockpiles.Migrations
                     b.ToTable("PointRule");
                 });
 
+            modelBuilder.Entity("JFJT.GemStockpiles.Models.Products.Category", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<long?>("DeleterUserId");
+
+                    b.Property<DateTime?>("DeletionTime");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<long?>("LastModifierUserId");
+
+                    b.Property<string>("Name");
+
+                    b.Property<Guid?>("ParentId");
+
+                    b.Property<string>("Remark");
+
+                    b.Property<int>("Sort");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Category");
+                });
+
             modelBuilder.Entity("JFJT.GemStockpiles.Models.Products.CategoryAttribute", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1219,6 +1251,8 @@ namespace JFJT.GemStockpiles.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("CategoryAttribute");
                 });
 
@@ -1227,31 +1261,7 @@ namespace JFJT.GemStockpiles.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<Guid>("AttributeId");
-
-                    b.Property<Guid?>("CategoryAttributeId");
-
-                    b.Property<DateTime>("CreationTime");
-
-                    b.Property<long?>("CreatorUserId");
-
-                    b.Property<DateTime?>("LastModificationTime");
-
-                    b.Property<long?>("LastModifierUserId");
-
-                    b.Property<string>("Value");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryAttributeId");
-
-                    b.ToTable("CategoryAttributeItem");
-                });
-
-            modelBuilder.Entity("JFJT.GemStockpiles.Models.Products.Categorys", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<Guid>("CategoryAttributeId");
 
                     b.Property<DateTime>("CreationTime");
 
@@ -1267,17 +1277,15 @@ namespace JFJT.GemStockpiles.Migrations
 
                     b.Property<long?>("LastModifierUserId");
 
-                    b.Property<string>("Name");
-
-                    b.Property<Guid?>("ParentId");
-
-                    b.Property<string>("Remark");
-
                     b.Property<int>("Sort");
+
+                    b.Property<string>("Value");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.HasIndex("CategoryAttributeId");
+
+                    b.ToTable("CategoryAttributeItem");
                 });
 
             modelBuilder.Entity("JFJT.GemStockpiles.Models.Products.Product", b =>
@@ -1582,11 +1590,20 @@ namespace JFJT.GemStockpiles.Migrations
                         .HasForeignKey("LastModifierUserId");
                 });
 
+            modelBuilder.Entity("JFJT.GemStockpiles.Models.Products.CategoryAttribute", b =>
+                {
+                    b.HasOne("JFJT.GemStockpiles.Models.Products.Category")
+                        .WithMany("Items")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("JFJT.GemStockpiles.Models.Products.CategoryAttributeItem", b =>
                 {
                     b.HasOne("JFJT.GemStockpiles.Models.Products.CategoryAttribute")
                         .WithMany("Items")
-                        .HasForeignKey("CategoryAttributeId");
+                        .HasForeignKey("CategoryAttributeId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("JFJT.GemStockpiles.Models.Products.ProductAttributeValue", b =>

@@ -108,7 +108,7 @@ namespace JFJT.GemStockpiles.Products.Categorys
 
             if (treeData != null)
             {
-                treeList = GetCascaderPermissionList(treeData, null, 0);
+                treeList = GetCascaderCategoryList(treeData, null, 0);
             }
 
             return Task.FromResult(new ListResultDto<CategoryCascaderDto>(ObjectMapper.Map<List<CategoryCascaderDto>>(treeList)));
@@ -121,7 +121,7 @@ namespace JFJT.GemStockpiles.Products.Categorys
         /// <param name="parentId"></param>
         /// <param name="parentLevel"></param>
         /// <returns></returns>
-        private List<CategoryCascaderDto> GetCascaderPermissionList(ListResultDto<Category> categoryData, Guid? parentId, int parentLevel)
+        private List<CategoryCascaderDto> GetCascaderCategoryList(ListResultDto<Category> categoryData, Guid? parentId, int parentLevel)
         {
             List<CategoryCascaderDto> treeList = new List<CategoryCascaderDto>();
 
@@ -130,7 +130,7 @@ namespace JFJT.GemStockpiles.Products.Categorys
 
             foreach (var item in treeData)
             {
-                var children = GetCascaderPermissionList(categoryData, item.Id, level);
+                var children = GetCascaderCategoryList(categoryData, item.Id, level);
                 var model = new CategoryCascaderDto() { label = item.Name, value = item.Id };
                 model.children = children.Count <= 0 ? null : children;
 

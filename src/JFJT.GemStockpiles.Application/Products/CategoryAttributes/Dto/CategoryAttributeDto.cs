@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
+using Abp.Application.Services.Dto;
 using JFJT.GemStockpiles.Enums;
 using JFJT.GemStockpiles.Models.Products;
 
@@ -18,7 +18,7 @@ namespace JFJT.GemStockpiles.Products.CategoryAttributes.Dto
         /// <summary>
         /// 类型名称层级路径
         /// </summary>
-        public string CategoryNamePath { get; set; }
+        public List<string> CategoryNamePath { get; set; } = new List<string>();
 
         /// <summary>
         /// 类型ID
@@ -28,7 +28,7 @@ namespace JFJT.GemStockpiles.Products.CategoryAttributes.Dto
         /// <summary>
         /// 类型ID层级路径
         /// </summary>
-        public string CategoryIdPath { get; set; }
+        public List<string> CategoryIdPath { get; set; } = new List<string>();
 
         /// <summary>       
         /// 属性名称

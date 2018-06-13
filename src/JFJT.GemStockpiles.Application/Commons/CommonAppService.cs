@@ -1,10 +1,11 @@
 ﻿using System;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Abp.UI;
+using Abp.Localization;
 using Abp.Authorization;
+using Abp.Runtime.Session;
 using JFJT.GemStockpiles.Helpers;
 using JFJT.GemStockpiles.Users.Dto;
 using JFJT.GemStockpiles.Commons.Dto;
@@ -14,7 +15,7 @@ using JFJT.GemStockpiles.Authorization.Users;
 namespace JFJT.GemStockpiles.Commons
 {
     /// <summary>
-    /// 存放公共的API接口, 必须登录才能进行操作
+    /// 存放公共的API接口(登录后调用)
     /// </summary>
     [AbpAuthorize]
     public class CommonAppService : GemStockpilesAppServiceBase, ICommonAppService
@@ -29,7 +30,21 @@ namespace JFJT.GemStockpiles.Commons
         }
 
         /// <summary>
-        /// 后台用户修改密码
+        /// 系统用户语言切换
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task ChangeLanguage(ChangeUserLanguageDto input)
+        {
+            await SettingManager.ChangeSettingForUserAsync(
+                AbpSession.ToUserIdentifier(),
+                LocalizationSettingNames.DefaultLanguage,
+                input.LanguageName
+            );
+        }
+
+        /// <summary>
+        /// 系统用户密码修改
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
@@ -41,7 +56,7 @@ namespace JFJT.GemStockpiles.Commons
         }
 
         /// <summary>
-        /// //后台用户修改个人信息
+        /// 系统用户个人信息修改
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>

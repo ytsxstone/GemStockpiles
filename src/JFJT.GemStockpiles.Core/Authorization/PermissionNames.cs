@@ -10,19 +10,19 @@
 
         #region 系统管理
         public const string Pages_SystemManagement = "Pages.SystemManagement";
-
+        //角色
         public const string Pages_SystemManagement_Roles = "Pages.SystemManagement.Roles";
         public const string Pages_SystemManagement_Roles_View = "Pages.SystemManagement.Roles.View";
         public const string Pages_SystemManagement_Roles_Create = "Pages.SystemManagement.Roles.Create";
         public const string Pages_SystemManagement_Roles_Edit = "Pages.SystemManagement.Roles.Edit";
         public const string Pages_SystemManagement_Roles_Delete = "Pages.SystemManagement.Roles.Delete";
-                                  
+        //用户                           
         public const string Pages_SystemManagement_Users = "Pages.SystemManagement.Users";
         public const string Pages_SystemManagement_Users_View = "Pages.SystemManagement.Users.View";
         public const string Pages_SystemManagement_Users_Create = "Pages.SystemManagement.Users.Create";
         public const string Pages_SystemManagement_Users_Edit = "Pages.SystemManagement.Users.Edit";
         public const string Pages_SystemManagement_Users_Delete = "Pages.SystemManagement.Users.Delete";
-
+        //租户
         public const string Pages_SystemManagement_Tenants = "Pages.SystemManagement.Tenants";
         public const string Pages_SystemManagement_Tenants_View = "Pages.SystemManagement.Tenants.View";
         public const string Pages_SystemManagement_Tenants_Create = "Pages.SystemManagement.Tenants.Create";
@@ -48,40 +48,40 @@
 
         #region 商品管理
         public const string Pages_ProductManagement = "Pages.ProductManagement";
-
+        //商品列表
         public const string Pages_ProductManagement_Products = "Pages.ProductManagement.Products";
         public const string Pages_ProductManagement_Products_View = "Pages.ProductManagement.Products.View";
         public const string Pages_ProductManagement_Products_Create = "Pages.ProductManagement.Products.Create ";
         public const string Pages_ProductManagement_Products_Edit = "Pages.ProductManagement.Products.Edit";
         public const string Pages_ProductManagement_Products_Delete = "Pages.ProductManagement.Products.Delete";
-
-        public const string Pages_ProductManagement_Analysis = "Pages.ProductManagement.Analysis";
-        public const string Pages_ProductManagement_Analysis_View = "Pages.ProductManagement.Analysis.View";
-        public const string Pages_ProductManagement_Analysis_Create = "Pages.ProductManagement.Analysis.Create";
-        public const string Pages_ProductManagement_Analysis_Edit = "Pages.ProductManagement.Analysis.Edit";
-        public const string Pages_ProductManagement_Analysis_Delete = "Pages.ProductManagement.Analysis.Delete";
-
+        //分类管理
         public const string Pages_ProductManagement_Categorys = "Pages.ProductManagement.Categorys";
         public const string Pages_ProductManagement_Categorys_View = "Pages.ProductManagement.Categorys.View";
         public const string Pages_ProductManagement_Categorys_Create = "Pages.ProductManagement.Categorys.Create";
         public const string Pages_ProductManagement_Categorys_Edit = "Pages.ProductManagement.Categorys.Edit";
         public const string Pages_ProductManagement_Categorys_Delete = "Pages.ProductManagement.Categorys.Delete";
+        //分类属性
+        public const string Pages_ProductManagement_CategoryAttributes = "Pages.ProductManagement.CategoryAttributes";
+        public const string Pages_ProductManagement_CategoryAttributes_View = "Pages.ProductManagement.CategoryAttributes.View";
+        public const string Pages_ProductManagement_CategoryAttributes_Create = "Pages.ProductManagement.CategoryAttributes.Create";
+        public const string Pages_ProductManagement_CategoryAttributes_Edit = "Pages.ProductManagement.CategoryAttributes.Edit";
+        public const string Pages_ProductManagement_CategoryAttributes_Delete = "Pages.ProductManagement.CategoryAttributes.Delete";
         #endregion
 
         #region 订单管理
         public const string Pages_OrderManagement = "Pages.OrderManagement";
-
-        public const string Pages_OrderManagement_Comments = "Pages.OrderManagement.Comments";
-        public const string Pages_OrderManagement_Comments_View = "Pages.OrderManagement.Comments.View";
-        public const string Pages_OrderManagement_Comments_Create = "Pages.OrderManagement.Comments.Create ";
-        public const string Pages_OrderManagement_Comments_Edit = "Pages.OrderManagement.Comments.Edit";
-        public const string Pages_OrderManagement_Comments_Delete = "Pages.OrderManagement.Comments.Delete";
-
+        //订单列表
         public const string Pages_OrderManagement_Orders = "Pages.OrderManagement.Orders";
         public const string Pages_OrderManagement_Orders_View = "Pages.OrderManagement.Orders.View";
         public const string Pages_OrderManagement_Orders_Create = "Pages.OrderManagement.Orders.Create ";
         public const string Pages_OrderManagement_Orders_Edit = "Pages.OrderManagement.Orders.Edit";
         public const string Pages_OrderManagement_Orders_Delete = "Pages.OrderManagement.Orders.Delete";
+        //订单评论
+        public const string Pages_OrderManagement_Comments = "Pages.OrderManagement.Comments";
+        public const string Pages_OrderManagement_Comments_View = "Pages.OrderManagement.Comments.View";
+        public const string Pages_OrderManagement_Comments_Create = "Pages.OrderManagement.Comments.Create ";
+        public const string Pages_OrderManagement_Comments_Edit = "Pages.OrderManagement.Comments.Edit";
+        public const string Pages_OrderManagement_Comments_Delete = "Pages.OrderManagement.Comments.Delete";
         #endregion
     }
 }

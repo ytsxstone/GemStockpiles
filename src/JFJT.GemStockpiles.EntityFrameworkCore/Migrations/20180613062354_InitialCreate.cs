@@ -399,29 +399,6 @@ namespace JFJT.GemStockpiles.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CategoryAttribute",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    CategoryId = table.Column<Guid>(nullable: false),
-                    CreationTime = table.Column<DateTime>(nullable: false),
-                    CreatorUserId = table.Column<long>(nullable: true),
-                    DeleterUserId = table.Column<long>(nullable: true),
-                    DeletionTime = table.Column<DateTime>(nullable: true),
-                    IsDeleted = table.Column<bool>(nullable: false),
-                    LastModificationTime = table.Column<DateTime>(nullable: true),
-                    LastModifierUserId = table.Column<long>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    Required = table.Column<bool>(nullable: false),
-                    Sort = table.Column<int>(nullable: false),
-                    Type = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CategoryAttribute", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Customer",
                 columns: table => new
                 {
@@ -850,27 +827,32 @@ namespace JFJT.GemStockpiles.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CategoryAttributeItem",
+                name: "CategoryAttribute",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    AttributeId = table.Column<Guid>(nullable: false),
-                    CategoryAttributeId = table.Column<Guid>(nullable: true),
+                    CategoryId = table.Column<Guid>(nullable: false),
                     CreationTime = table.Column<DateTime>(nullable: false),
                     CreatorUserId = table.Column<long>(nullable: true),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
                     LastModificationTime = table.Column<DateTime>(nullable: true),
                     LastModifierUserId = table.Column<long>(nullable: true),
-                    Value = table.Column<string>(nullable: true)
+                    Name = table.Column<string>(nullable: true),
+                    Required = table.Column<bool>(nullable: false),
+                    Sort = table.Column<int>(nullable: false),
+                    Type = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CategoryAttributeItem", x => x.Id);
+                    table.PrimaryKey("PK_CategoryAttribute", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CategoryAttributeItem_CategoryAttribute_CategoryAttributeId",
-                        column: x => x.CategoryAttributeId,
-                        principalTable: "CategoryAttribute",
+                        name: "FK_CategoryAttribute_Category_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Category",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -997,6 +979,33 @@ namespace JFJT.GemStockpiles.Migrations
                         name: "FK_AbpRoleClaims_AbpRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AbpRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CategoryAttributeItem",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    CategoryAttributeId = table.Column<Guid>(nullable: false),
+                    CreationTime = table.Column<DateTime>(nullable: false),
+                    CreatorUserId = table.Column<long>(nullable: true),
+                    DeleterUserId = table.Column<long>(nullable: true),
+                    DeletionTime = table.Column<DateTime>(nullable: true),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    LastModificationTime = table.Column<DateTime>(nullable: true),
+                    LastModifierUserId = table.Column<long>(nullable: true),
+                    Sort = table.Column<int>(nullable: false),
+                    Value = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CategoryAttributeItem", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CategoryAttributeItem_CategoryAttribute_CategoryAttributeId",
+                        column: x => x.CategoryAttributeId,
+                        principalTable: "CategoryAttribute",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -1302,6 +1311,11 @@ namespace JFJT.GemStockpiles.Migrations
                 columns: new[] { "TenantId", "UserId" });
 
             migrationBuilder.CreateIndex(
+                name: "IX_CategoryAttribute_CategoryId",
+                table: "CategoryAttribute",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CategoryAttributeItem_CategoryAttributeId",
                 table: "CategoryAttributeItem",
                 column: "CategoryAttributeId");
@@ -1386,9 +1400,6 @@ namespace JFJT.GemStockpiles.Migrations
                 name: "AbpUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Category");
-
-            migrationBuilder.DropTable(
                 name: "CategoryAttributeItem");
 
             migrationBuilder.DropTable(
@@ -1435,6 +1446,9 @@ namespace JFJT.GemStockpiles.Migrations
 
             migrationBuilder.DropTable(
                 name: "AbpUsers");
+
+            migrationBuilder.DropTable(
+                name: "Category");
         }
     }
 }

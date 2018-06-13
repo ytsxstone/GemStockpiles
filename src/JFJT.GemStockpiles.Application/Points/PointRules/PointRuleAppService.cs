@@ -30,6 +30,11 @@ namespace JFJT.GemStockpiles.Points.PointRules
             _pointRuleRepository = pointRuleRepository;
         }
 
+        /// <summary>
+        /// 添加积分方案
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [AbpAuthorize(PermissionNames.Pages_PointManagement_PointRules_Create)]
         public override async Task<PointRuleDto> Create(PointRuleDto input)
         {
@@ -44,6 +49,11 @@ namespace JFJT.GemStockpiles.Points.PointRules
             return MapToEntityDto(entity);
         }
 
+        /// <summary>
+        /// 修改积分方案
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [AbpAuthorize(PermissionNames.Pages_PointManagement_PointRules_Edit)]
         public override async Task<PointRuleDto> Update(PointRuleDto input)
         {
@@ -62,6 +72,11 @@ namespace JFJT.GemStockpiles.Points.PointRules
             return MapToEntityDto(entity);
         }
 
+        /// <summary>
+        /// 删除积分方案
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [AbpAuthorize(PermissionNames.Pages_PointManagement_PointRules_Delete)]
         public override async Task Delete(EntityDto<Guid> input)
         {
@@ -75,7 +90,7 @@ namespace JFJT.GemStockpiles.Points.PointRules
         }
 
         /// <summary>
-        /// 获取所有积分动作列表
+        /// 获取积分动作列表
         /// </summary>
         /// <returns></returns>
         public Task<ListResultDto<IdAndNameDto>> GetAllPointActions()
@@ -93,11 +108,21 @@ namespace JFJT.GemStockpiles.Points.PointRules
             ));
         }
 
+        /// <summary>
+        /// Dto模型映射
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="pointRule"></param>
         protected override void MapToEntity(PointRuleDto input, PointRule pointRule)
         {
             ObjectMapper.Map(input, pointRule);
         }
 
+        /// <summary>
+        /// 根据ID获取Entity模型
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         protected override async Task<PointRule> GetEntityByIdAsync(Guid id)
         {
             var entity = await Repository.FirstOrDefaultAsync(x => x.Id == id);
@@ -109,11 +134,23 @@ namespace JFJT.GemStockpiles.Points.PointRules
             return entity;
         }
 
+        /// <summary>
+        /// GetAll查询排序条件
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="input"></param>
+        /// <returns></returns>
         protected override IQueryable<PointRule> ApplySorting(IQueryable<PointRule> query, PagedResultRequestDto input)
         {
             return query.OrderBy(r => r.Name);
         }
 
+        /// <summary>
+        /// 检测积分方案名称是否已存在
+        /// </summary>
+        /// <param name="expectedId"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
         protected async Task<IdentityResult> CheckActionNameAsync(Guid? expectedId, PointActionEnum name)
         {
             var entity = await _pointRuleRepository.FirstOrDefaultAsync(b => b.Name == name);
@@ -125,6 +162,10 @@ namespace JFJT.GemStockpiles.Points.PointRules
             return IdentityResult.Success;
         }
 
+        /// <summary>
+        /// 异常描述本地化转换函数
+        /// </summary>
+        /// <param name="identityResult"></param>
         protected virtual void CheckErrors(IdentityResult identityResult)
         {
             identityResult.CheckErrors(LocalizationManager);

@@ -9,6 +9,10 @@ namespace JFJT.GemStockpiles.Points.PointRules
 {
     public interface IPointRuleAppService : IAsyncCrudAppService<PointRuleDto, Guid, PagedResultRequestDto, PointRuleDto, PointRuleDto>
     {
+        /// <summary>
+        /// 获取积分动作列表
+        /// </summary>
+        /// <returns></returns>
         Task<ListResultDto<IdAndNameDto>> GetAllPointActions();
     }
 }

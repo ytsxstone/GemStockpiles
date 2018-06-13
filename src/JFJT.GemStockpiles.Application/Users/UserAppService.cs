@@ -4,10 +4,8 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Abp.Extensions;
-using Abp.Localization;
 using Abp.Authorization;
 using Abp.Linq.Extensions;
-using Abp.Runtime.Session;
 using Abp.IdentityFramework;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
@@ -44,6 +42,11 @@ namespace JFJT.GemStockpiles.Users
             _passwordHasher = passwordHasher;
         }
 
+        /// <summary>
+        /// 添加用户
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [AbpAuthorize(PermissionNames.Pages_SystemManagement_Users_Create)]
         public override async Task<UserDto> Create(CreateUserDto input)
         {
@@ -67,6 +70,11 @@ namespace JFJT.GemStockpiles.Users
             return MapToEntityDto(user);
         }
 
+        /// <summary>
+        /// 修改用户
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [AbpAuthorize(PermissionNames.Pages_SystemManagement_Users_Edit)]
         public override async Task<UserDto> Update(UserDto input)
         {
@@ -92,6 +100,11 @@ namespace JFJT.GemStockpiles.Users
             return await Get(input);
         }
 
+        /// <summary>
+        /// 删除用户
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         [AbpAuthorize(PermissionNames.Pages_SystemManagement_Users_Delete)]
         public override async Task Delete(EntityDto<long> input)
         {
@@ -99,21 +112,21 @@ namespace JFJT.GemStockpiles.Users
             await _userManager.DeleteAsync(user);
         }
 
+        /// <summary>
+        /// 获取系统角色数据
+        /// </summary>
+        /// <returns></returns>
         public async Task<ListResultDto<RoleDto>> GetRoles()
         {
             var roles = await _roleRepository.GetAllListAsync();
             return new ListResultDto<RoleDto>(ObjectMapper.Map<List<RoleDto>>(roles));
         }
 
-        public async Task ChangeLanguage(ChangeUserLanguageDto input)
-        {
-            await SettingManager.ChangeSettingForUserAsync(
-                AbpSession.ToUserIdentifier(),
-                LocalizationSettingNames.DefaultLanguage,
-                input.LanguageName
-            );
-        }
-
+        /// <summary>
+        /// Dto模型映射
+        /// </summary>
+        /// <param name="createInput"></param>
+        /// <returns></returns>
         protected override User MapToEntity(CreateUserDto createInput)
         {
             var user = ObjectMapper.Map<User>(createInput);
@@ -121,12 +134,22 @@ namespace JFJT.GemStockpiles.Users
             return user;
         }
 
+        /// <summary>
+        /// Dto模型映射
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="user"></param>
         protected override void MapToEntity(UserDto input, User user)
         {
             ObjectMapper.Map(input, user);
             user.SetNormalizedNames();
         }
 
+        /// <summary>
+        /// Dto模型映射
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         protected override UserDto MapToEntityDto(User user)
         {
             var roles = _roleManager.Roles.Where(r => user.Roles.Any(ur => ur.RoleId == r.Id)).Select(r => r.NormalizedName);
@@ -135,17 +158,11 @@ namespace JFJT.GemStockpiles.Users
             return userDto;
         }
 
-        protected void MapToEntity(ChangeUserInfoDto input, User user)
-        {
-            ObjectMapper.Map(input, user);
-            user.SetNormalizedNames();
-        }
-
-        protected override IQueryable<User> CreateFilteredQuery(PagedResultRequestExtendDto input)
-        {
-            return Repository.GetAllIncluding(x => x.Roles).WhereIf(!input.KeyWord.IsNullOrWhiteSpace(), x => x.UserName.Contains(input.KeyWord) || x.Name.Contains(input.KeyWord));
-        }
-
+        /// <summary>
+        /// 根据ID获取Entity模型
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         protected override async Task<User> GetEntityByIdAsync(long id)
         {
             var user = await Repository.GetAllIncluding(x => x.Roles).FirstOrDefaultAsync(x => x.Id == id);
@@ -158,11 +175,31 @@ namespace JFJT.GemStockpiles.Users
             return user;
         }
 
+        /// <summary>
+        /// GetAll查询过滤条件
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        protected override IQueryable<User> CreateFilteredQuery(PagedResultRequestExtendDto input)
+        {
+            return Repository.GetAllIncluding(x => x.Roles).WhereIf(!input.KeyWord.IsNullOrWhiteSpace(), x => x.UserName.Contains(input.KeyWord) || x.Name.Contains(input.KeyWord));
+        }
+
+        /// <summary>
+        /// GetAll查询排序条件
+        /// </summary>
+        /// <param name="query"></param>
+        /// <param name="input"></param>
+        /// <returns></returns>
         protected override IQueryable<User> ApplySorting(IQueryable<User> query, PagedResultRequestExtendDto input)
         {
             return query.OrderBy(r => r.UserName);
         }
 
+        /// <summary>
+        /// 异常描述本地化转换函数
+        /// </summary>
+        /// <param name="identityResult"></param>
         protected virtual void CheckErrors(IdentityResult identityResult)
         {
             identityResult.CheckErrors(LocalizationManager);

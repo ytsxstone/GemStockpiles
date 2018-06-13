@@ -8,7 +8,7 @@ using JFJT.GemStockpiles.Points.PointLogs.Dto;
 
 namespace JFJT.GemStockpiles.Points.PointLogs
 {
-    public class PointLogAppService: GemStockpilesAppServiceBase
+    public class PointLogAppService : GemStockpilesAppServiceBase
     {
         private readonly IRepository<PointLog, Guid> _pointLogRepository;
         private readonly IRepository<PointRule, Guid> _pointRuleRepository;

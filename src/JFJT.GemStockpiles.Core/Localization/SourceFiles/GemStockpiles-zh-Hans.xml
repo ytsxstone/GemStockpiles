@@ -35,11 +35,11 @@
     <text name="PointRules" value="积分方案" />
     <text name="PointRanks" value="积分等级" />
     <text name="ProductManagement" value="商品管理" />
-    <text name="ProductList" value="商品列表" />
-    <text name="ProductAnalysis" value="商品分析" />
+    <text name="Products" value="商品列表" />
     <text name="ProductCategorys" value="商品分类" />
+    <text name="CategoryAttributes" value="分类属性" />
     <text name="OrderManagement" value="订单管理" />
-    <text name="OrderList" value="订单列表" />
-    <text name="CommentsManagement" value="评论管理" />
+    <text name="Orders" value="订单列表" />
+    <text name="OrderComments" value="订单评论" />
   </texts>
 </localizationDictionary>

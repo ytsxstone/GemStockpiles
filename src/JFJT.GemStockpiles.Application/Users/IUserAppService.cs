@@ -9,8 +9,10 @@ namespace JFJT.GemStockpiles.Users
 {
     public interface IUserAppService : IAsyncCrudAppService<UserDto, long, PagedResultRequestExtendDto, CreateUserDto, UserDto>
     {
+        /// <summary>
+        /// 获取系统角色数据
+        /// </summary>
+        /// <returns></returns>
         Task<ListResultDto<RoleDto>> GetRoles();
-
-        Task ChangeLanguage(ChangeUserLanguageDto input);
     }
 }
